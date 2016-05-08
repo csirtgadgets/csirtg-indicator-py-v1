@@ -1,0 +1,2 @@
+include versioneer.py
+include csirtg/indicator/_version.py
