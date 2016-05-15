@@ -32,7 +32,7 @@ setup(
     scripts=[],
     entry_points={
        'console_scripts': [
-           'csirtg_indicator=csirtg-indicator:main',
+           'csirtg-indicator=csirtg_indicator.indicator:main',
        ]
     },
 )

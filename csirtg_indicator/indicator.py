@@ -7,6 +7,7 @@ from datetime import datetime
 import arrow
 import pytricia
 from .utils import parse_timestamp, resolve_itype
+from . import VERSION
 
 TLP = "green"
 GROUP = "everyone"
