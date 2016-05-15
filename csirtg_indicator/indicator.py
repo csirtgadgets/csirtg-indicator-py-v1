@@ -1,15 +1,12 @@
 import json
-from datetime import datetime
-import pytricia
-import sys
-from csirtg.indicator.utils import resolve_itype
-import arrow
-from csirtg.indicator.utils import parse_timestamp
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
-import textwrap
 import logging
-from csirtg.indicator import _version as VERSION
+import textwrap
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from datetime import datetime
 
+import arrow
+import pytricia
+from .utils import parse_timestamp, resolve_itype
 
 TLP = "green"
 GROUP = "everyone"

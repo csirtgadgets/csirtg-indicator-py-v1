@@ -10,10 +10,10 @@ with open('requirements.txt') as f:
     reqs = f.read().splitlines()
 
 setup(
-    name="csirtg-indicator-py",
+    name="csirtg_indicator",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="CSIRT Indicator Framework",
+    description="CSIRTG Indicator Framework",
     long_description="",
     url="https://github.com/csirtgadgets/csirtg-indicator-py",
     license='LGPL3',
@@ -31,8 +31,8 @@ setup(
     install_requires=reqs,
     scripts=[],
     entry_points={
-        'console_scripts': [
-            'csirtg-indicator=csirtg.indicator:main',
-        ]
+       'console_scripts': [
+           'csirtg_indicator=csirtg-indicator:main',
+       ]
     },
 )

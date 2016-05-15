@@ -1,6 +1,4 @@
-import py.test
-
-from csirtg.indicator import Indicator
+from csirtg_indicator import Indicator
 
 
 def test_indicator_ipv4():
