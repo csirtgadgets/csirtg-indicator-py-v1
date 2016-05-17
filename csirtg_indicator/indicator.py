@@ -6,7 +6,7 @@ from datetime import datetime
 
 import arrow
 import pytricia
-from .utils import parse_timestamp, resolve_itype
+from .utils import parse_timestamp, resolve_itype, is_subdomain
 from . import VERSION
 
 TLP = "green"
@@ -40,12 +40,12 @@ class Indicator(object):
                  firsttime=arrow.get(datetime.utcnow()).datetime, lasttime=arrow.get(datetime.utcnow()).datetime,
                  asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
                  peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
-                 altid_tlp=None, additional_data=None, mask=None):
+                 altid_tlp=None, additional_data=None, mask=None, version=PROTOCOL_VERSION):
 
         if isinstance(tags, str):
             tags = tags.split(",")
 
-        self.version = PROTOCOL_VERSION
+        self.version = version
 
         self.indicator = indicator
         self.tlp = tlp
@@ -119,6 +119,9 @@ class Indicator(object):
             if IPV4_PRIVATE.get(self.indicator):
                 return True
         return False
+
+    def is_subdomain(self):
+        return is_subdomain(self.indicator)
 
     def __repr__(self):
         o = {

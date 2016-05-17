@@ -28,6 +28,7 @@ RE_HASH = {
     'sha512': re.compile('^[a-fA-F0-9]{128}$'),
 }
 
+
 def resolve_itype(indicator, test_broken=False):
     def _ipv6(s):
         try:
@@ -108,6 +109,14 @@ def normalize_itype(i, itype=None):
 
     i = _normalize_url(i)
     return i
+
+
+def is_subdomain(i):
+    if resolve_itype(i) == 'fqdn':
+        bits = i.split('.')
+        if len(bits) > 2:
+            bits.pop(0)
+            return '.'.join(bits)
 
 
 def parse_timestamp(ts):

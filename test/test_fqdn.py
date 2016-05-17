@@ -1,4 +1,5 @@
 from csirtg_indicator import Indicator
+from csirtg_indicator.utils import is_subdomain
 
 
 def _not(data):
@@ -27,3 +28,26 @@ def test_fqdn_ok():
     for d in data:
         d = Indicator(d)
         assert d.itype is 'fqdn'
+
+
+def test_fqdn_subdomain():
+    data = [
+        'www.yahoo.com',
+        'www.ww2.yahoo.com',
+    ]
+
+    for d in data:
+        print Indicator(indicator=d).is_subdomain()
+        assert Indicator(indicator=d).is_subdomain()
+
+
+    data = [
+        'yahoo.com',
+        'google.com',
+        'http://google.com',
+        'https://www.google.com',
+        'http://www2.www.google.com',
+    ]
+
+    for d in data:
+        assert not Indicator(indicator=d).is_subdomain()
