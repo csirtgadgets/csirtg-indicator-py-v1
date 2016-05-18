@@ -17,9 +17,11 @@ def test_indicator_fqdn():
 
 
 def test_indicator_url():
-    i = Indicator('http://example.org')
+    i = Indicator('http://example.org', tags='botnet,malware')
 
     assert i.is_private() is False
     assert i.indicator == 'http://example.org'
     assert i.itype is not 'fqdn'
     assert i.itype is 'url'
+    assert 'botnet' in i.tags
+    assert 'malware' in i.tags

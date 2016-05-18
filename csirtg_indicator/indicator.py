@@ -40,10 +40,15 @@ class Indicator(object):
                  firsttime=arrow.get(datetime.utcnow()).datetime, lasttime=arrow.get(datetime.utcnow()).datetime,
                  asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
                  peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
-                 altid_tlp=None, additional_data=None, mask=None, version=PROTOCOL_VERSION):
+                 altid_tlp=None, additional_data=None, mask=None, version=PROTOCOL_VERSION, **kwargs):
 
         if isinstance(tags, str):
-            tags = tags.split(",")
+            if ',' in tags:
+                tags = tags.split(",")
+            else:
+                tags = [tags]
+
+        self.logger = logging.getLogger(__name__)
 
         self.version = version
 
@@ -116,7 +121,7 @@ class Indicator(object):
 
     def is_private(self):
         if self.itype and self.itype == 'ipv4':
-            if IPV4_PRIVATE.get(self.indicator):
+            if IPV4_PRIVATE.get(str(self.indicator)):
                 return True
         return False
 
@@ -132,7 +137,6 @@ class Indicator(object):
             "provider": self.provider,
             "portlist": self.portlist,
             "protocol": self.protocol,
-            "tags": self.tags,
             "asn": self.asn,
             "asn_desc": self.asn_desc,
             "cc": self.cc,
@@ -148,6 +152,13 @@ class Indicator(object):
             'description': self.description,
             'additional_data': self.additional_data
         }
+
+        if self.tags:
+            if isinstance(self.tags, str):
+                if ',' in self.tags:
+                    self.tags = self.tags.split(",")
+                else:
+                    self.tags = [self.tags]
 
         if self.timezone:
             o['timezone'] = self.timezone.lower()
