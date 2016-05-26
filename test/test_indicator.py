@@ -1,5 +1,5 @@
 from csirtg_indicator import Indicator
-
+import json
 
 def test_indicator_ipv4():
     i = Indicator('192.168.1.1')
@@ -24,4 +24,16 @@ def test_indicator_url():
     assert i.itype is not 'fqdn'
     assert i.itype is 'url'
     assert 'botnet' in i.tags
+    assert 'malware' in i.tags
+
+
+def test_indicator_str():
+    i = Indicator('http://example.org', tags='botnet,malware')
+
+    s = json.loads(str(i))
+
+    assert 'botnet' in s['tags']
+
+    i = Indicator(**s)
+
     assert 'malware' in i.tags

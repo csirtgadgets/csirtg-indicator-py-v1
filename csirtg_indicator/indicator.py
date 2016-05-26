@@ -159,6 +159,7 @@ class Indicator(object):
                     self.tags = self.tags.split(",")
                 else:
                     self.tags = [self.tags]
+            o['tags'] = self.tags
 
         if self.timezone:
             o['timezone'] = self.timezone.lower()
