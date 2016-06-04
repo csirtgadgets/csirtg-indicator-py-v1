@@ -6,9 +6,6 @@ import versioneer
 if os.environ.get('USER') == 'vagrant' or os.path.isdir('/vagrant'):
     del os.link
 
-with open('requirements.txt') as f:
-    reqs = f.read().splitlines()
-
 setup(
     name="csirtg_indicator",
     version=versioneer.get_version(),
@@ -28,7 +25,13 @@ setup(
     author="Wes Young",
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
-    install_requires=reqs,
+    install_requires=[
+        'arrow>=0.7.0',
+        'pytest>=2.9.1',
+        'pytricia>=0.9.0',
+        'ipaddress>=1.0.16',
+        'pytest-cov>=2.2.1',
+    ],
     scripts=[],
     entry_points={
        'console_scripts': [
