@@ -3,6 +3,7 @@ import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime
+from urlparse import urlparse
 
 import arrow
 import pytricia
@@ -40,7 +41,7 @@ class Indicator(object):
                  firsttime=arrow.get(datetime.utcnow()).datetime, lasttime=arrow.get(datetime.utcnow()).datetime,
                  asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
                  peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
-                 altid_tlp=None, additional_data=None, mask=None, version=PROTOCOL_VERSION, **kwargs):
+                 altid_tlp=None, additional_data=None, mask=None, rdata=None, version=PROTOCOL_VERSION, **kwargs):
 
         if isinstance(tags, str):
             if ',' in tags:
@@ -77,6 +78,7 @@ class Indicator(object):
         self.altid_tlp = altid_tlp
         self.additional_data = additional_data
         self.mask = mask
+        self.rdata = rdata
 
         if self.description:
             self.description = self.description.replace('\"', '').lower()
@@ -109,6 +111,10 @@ class Indicator(object):
 
         if self.mask and self.itype == 'ipv4':
             self.indicator = '{}/{}'.format(self.indicator, int(self.mask))
+
+        if self.itype == 'url':
+            u = urlparse(self.indicator)
+            self.indicator = u.geturl().rstrip('/').lower()
 
     def magic(self, data):
         for e in data:
@@ -150,7 +156,8 @@ class Indicator(object):
             'longitude': self.longitude,
             'latitude': self.latitude,
             'description': self.description,
-            'additional_data': self.additional_data
+            'additional_data': self.additional_data,
+            'rdata': self.rdata
         }
 
         if self.tags:
