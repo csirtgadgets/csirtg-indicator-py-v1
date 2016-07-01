@@ -7,6 +7,8 @@ import socket
 import re
 import sys
 import ipaddress
+from .exceptions import InvalidIndicator
+
 if sys.version_info > (3,):
     from urllib.parse import urlparse
 else:
@@ -90,7 +92,7 @@ def resolve_itype(indicator, test_broken=False):
     elif _ipv6(indicator):
         return 'ipv6'
 
-    raise NotImplementedError('unknown itype for "{}"'.format(indicator))
+    raise InvalidIndicator('unknown itype for "{}"'.format(indicator))
 
 
 def _normalize_url(i):
@@ -117,6 +119,17 @@ def is_subdomain(i):
         if len(bits) > 2:
             bits.pop(0)
             return '.'.join(bits)
+
+
+def is_ipv4_net(i):
+    if resolve_itype(i) == 'ipv4':
+        if re.match(RE_IPV4_CIDR, i):
+            try:
+                ipaddress.ip_network(unicode(i))
+            except ValueError as e:
+                return False
+            return True
+        return False
 
 
 def parse_timestamp(ts):
