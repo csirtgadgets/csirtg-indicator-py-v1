@@ -21,6 +21,7 @@ RE_IPV6 = re.compile('(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4
 # http://goo.gl/Cztyn2 -- probably needs more work
 RE_FQDN = re.compile('^((xn--)?(--)?[a-zA-Z0-9-_]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(--p1ai)?$')
 RE_URI_SCHEMES = re.compile('^(https?|ftp)$')
+RE_EMAIL = re.compile('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$')
 
 RE_HASH = {
     'uuid': re.compile('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$'),
@@ -79,6 +80,10 @@ def resolve_itype(indicator, test_broken=False):
             if re.match(RE_HASH[h], s):
                 return h
 
+    def _email(s):
+        if re.match(RE_EMAIL, s):
+            return True
+
     if test_broken and _url_broken(indicator):
         return 'broken_url'
     elif _url(indicator):
@@ -87,6 +92,8 @@ def resolve_itype(indicator, test_broken=False):
         return _hash(indicator)
     elif _fqdn(indicator):
         return 'fqdn'
+    elif _email(indicator):
+        return 'email'
     elif _ipv4(indicator) or _ipv4_cidr(indicator):
         return 'ipv4'
     elif _ipv6(indicator):
