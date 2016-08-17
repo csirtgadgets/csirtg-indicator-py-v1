@@ -37,7 +37,7 @@ def test_fqdn_subdomain():
     ]
 
     for d in data:
-        print Indicator(indicator=d).is_subdomain()
+        print(Indicator(indicator=d).is_subdomain())
         assert Indicator(indicator=d).is_subdomain()
 
 

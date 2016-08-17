@@ -3,12 +3,17 @@ import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime
-from urlparse import urlparse
 
 import arrow
 import pytricia
 from .utils import parse_timestamp, resolve_itype, is_subdomain
 from . import VERSION
+import sys
+
+if sys.version_info > (3,):
+    from urllib.parse import urlparse
+else:
+    from urlparse import urlparse
 
 TLP = "green"
 GROUP = "everyone"
