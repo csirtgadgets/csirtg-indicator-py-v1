@@ -9,10 +9,13 @@ import sys
 import ipaddress
 from .exceptions import InvalidIndicator
 
+PYVERSION=2
 if sys.version_info > (3,):
     from urllib.parse import urlparse
+    PYVERSION = 3
 else:
     from urlparse import urlparse
+
 RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}$')
 RE_IPV4_CIDR = re.compile('^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/\d{1,2})$')
 
@@ -52,8 +55,10 @@ def resolve_itype(indicator, test_broken=False):
 
     def _ipv4_cidr(s):
         if re.match(RE_IPV4_CIDR, s):
+            if PYVERSION == 2:
+                s = unicode(s)
             try:
-                ipaddress.ip_network(unicode(s))
+                ipaddress.ip_network(s)
             except ValueError as e:
                 return False
             return True
