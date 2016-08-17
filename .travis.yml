@@ -5,8 +5,10 @@ python:
     - 2.7
 #    - 3.4
 
-script:
+before_install:
     - sudo pip install pytest-cov
+
+script:
     - py.test --cov=csirtg_indicator --cov-fail-under=50
 
 

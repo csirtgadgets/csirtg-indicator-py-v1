@@ -1,4 +1,5 @@
 from csirtg_indicator import Indicator
+from csirtg_indicator.exceptions import InvalidIndicator
 
 
 def _not(data):
@@ -25,9 +26,7 @@ def test_urls_not_ok():
     for d in data:
         try:
             d = Indicator(d)
-            from pprint import pprint
-            pprint(d)
-        except NotImplementedError:
+        except InvalidIndicator:
             pass
         else:
             raise NotImplementedError
