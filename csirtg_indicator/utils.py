@@ -118,7 +118,7 @@ def normalize_itype(i, itype=None):
     try:
         if resolve_itype(i['indicator']):
             return i
-    except NotImplementedError:
+    except InvalidIndicator:
         pass
 
     i = _normalize_url(i)

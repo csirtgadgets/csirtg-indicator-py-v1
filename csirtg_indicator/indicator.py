@@ -9,6 +9,7 @@ import pytricia
 from .utils import parse_timestamp, resolve_itype, is_subdomain
 from . import VERSION
 import sys
+from .exceptions import InvalidIndicator
 
 if sys.version_info > (3,):
     from urllib.parse import urlparse
@@ -127,7 +128,7 @@ class Indicator(object):
                 itype = self.resolve_itype(e)
                 i = Indicator(itype=itype, indicator=e)
                 return i
-            except NotImplementedError:
+            except InvalidIndicator:
                 pass
 
     def is_private(self):
