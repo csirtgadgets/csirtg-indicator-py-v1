@@ -44,7 +44,7 @@ class Indicator(object):
     def __init__(self, indicator=None, itype=None, tlp=TLP, tags=[], group=GROUP,
                  reporttime=arrow.get(datetime.utcnow()).datetime,
                  provider=None,  protocol=None, portlist=None,  asn=None,
-                 firsttime=arrow.get(datetime.utcnow()).datetime, lasttime=arrow.get(datetime.utcnow()).datetime,
+                 firsttime=None, lasttime=None,
                  asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
                  peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
                  altid_tlp=None, additional_data=None, mask=None, rdata=None, version=PROTOCOL_VERSION, **kwargs):
