@@ -7,6 +7,7 @@ import socket
 import re
 import sys
 import ipaddress
+import pendulum
 from .exceptions import InvalidIndicator
 
 PYVERSION=2
@@ -171,6 +172,10 @@ def parse_timestamp(ts):
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
         else:
             raise RuntimeError('Invalid Timestamp: %s' % ts)
+    except arrow.parser.ParserError as e:
+        t = pendulum.parse(ts)
+        t = arrow.get(t)
+        return t
     else:
         raise RuntimeError('Invalid Timestamp: %s' % ts)
 
