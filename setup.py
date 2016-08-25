@@ -31,6 +31,7 @@ setup(
         'pytricia>=0.9.0',
         'ipaddress>=1.0.16',
         'pytest-cov>=2.2.1',
+        'pendulum>=0.5.2'
     ],
     scripts=[],
     entry_points={

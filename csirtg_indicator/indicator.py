@@ -10,6 +10,8 @@ from .utils import parse_timestamp, resolve_itype, is_subdomain
 from . import VERSION
 import sys
 from .exceptions import InvalidIndicator
+from base64 import b64encode, b64decode
+from zlib import compress,decompress
 
 if sys.version_info > (3,):
     from urllib.parse import urlparse
@@ -47,7 +49,8 @@ class Indicator(object):
                  firsttime=None, lasttime=None,
                  asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
                  peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
-                 altid_tlp=None, additional_data=None, mask=None, rdata=None, version=PROTOCOL_VERSION, **kwargs):
+                 altid_tlp=None, additional_data=None, mask=None, rdata=None, msg=None, version=PROTOCOL_VERSION,
+                 **kwargs):
 
         if isinstance(tags, str):
             if ',' in tags:
@@ -85,6 +88,8 @@ class Indicator(object):
         self.additional_data = additional_data
         self.mask = mask
         self.rdata = rdata
+
+        self.msg = msg
 
         if self.description:
             self.description = self.description.replace('\"', '').lower()
@@ -192,6 +197,12 @@ class Indicator(object):
         else:
             o['lasttime'] = self.lasttime
 
+        if self.msg:
+            if isinstance(self.msg, str):
+                self.msg = self.msg.encode("utf-8")
+
+            self.msg = b64encode(self.msg)
+            o['msg'] = self.msg.decode('utf-8')  # make json parser happy
         try:
             return json.dumps(o, sort_keys=True, indent=4, separators=(',', ': '))
         except UnicodeDecodeError as e:
