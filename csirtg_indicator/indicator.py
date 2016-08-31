@@ -145,6 +145,10 @@ class Indicator(object):
     def is_subdomain(self):
         return is_subdomain(self.indicator)
 
+    def __dict__(self):
+        s = str(self)
+        return json.loads(s)
+
     def __repr__(self):
         o = {
             "version": self.version,

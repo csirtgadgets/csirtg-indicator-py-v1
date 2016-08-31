@@ -8,6 +8,8 @@ except ImportError:
 
 from .plugin import Plugin
 
+if PYVERSION > 2:
+    basestring = (str, bytes)
 
 class Csv(Plugin):
 
@@ -28,7 +30,9 @@ class Csv(Plugin):
                     y = unicode(y).replace('\n', r'\\n')
                     r[c] = y.encode('utf-8', 'ignore')
                 else:
-                    r[c] = y.replace('\n', r'\\n')
+                    r[c] = y
+                    if isinstance(r[c], basestring):
+                        r[c] = r[c].replace('\n', r'\\n')
                 
             csvWriter.writerow(r)
         
