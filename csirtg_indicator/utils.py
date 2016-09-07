@@ -71,7 +71,6 @@ def resolve_itype(indicator, test_broken=False):
 
     def _url(s):
         u = urlparse(s)
-        pprint(u)
         if re.match(RE_URI_SCHEMES, u.scheme):
             u = u.netloc
 
