@@ -74,9 +74,6 @@ def resolve_itype(indicator, test_broken=False):
         if re.match(RE_URI_SCHEMES, u.scheme):
             u = u.netloc
 
-            if _fqdn(u):
-                return True
-
             if _ipv6(u):
                 return True
 
@@ -84,6 +81,12 @@ def resolve_itype(indicator, test_broken=False):
                 u1 = u.split(':')[0]
                 if _ipv4(u1):
                     return True
+
+                if _fqdn(u1):
+                    return True
+
+            if _fqdn(u):
+                return True
 
             if _ipv4(u):
                 return True
