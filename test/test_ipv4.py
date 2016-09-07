@@ -51,4 +51,4 @@ def test_ipv4_private():
     for d in data:
         assert not Indicator(indicator=d).is_private()
 
-    assert Indicator('192.168.1.1').is_private()
+    assert Indicator('172.16.30.32').is_private()
