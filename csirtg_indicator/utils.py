@@ -72,7 +72,20 @@ def resolve_itype(indicator, test_broken=False):
     def _url(s):
         u = urlparse(s)
         if re.match(RE_URI_SCHEMES, u.scheme):
-            if _fqdn(u.netloc) or _ipv4(u.netloc) or _ipv6(u.netloc):
+            u = u.netloc
+
+            if _fqdn(u):
+                return True
+
+            if _ipv6(u):
+                return True
+
+            if ':' in u:  # 192.168.1.1:81
+                u1 = u.split(':')[0]
+                if _ipv4(u1):
+                    return True
+
+            if _ipv4(u):
                 return True
 
     def _url_broken(s):
