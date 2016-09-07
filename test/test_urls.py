@@ -2,11 +2,11 @@ from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
 
 GOOD = [
-    'http://58.147.128.10:81/val/1.html',
-    'http://192.168.1.1/1.html',
-    'http://www41.xzmnt.com',
-    'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
-    'http://webmail.epuc.com.br:32000/mail/settings.html',
+    # 'http://58.147.128.10:81/val/1.html',
+    # 'http://192.168.1.1/1.html',
+    # 'http://www41.xzmnt.com',
+    # 'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
+    # 'http://webmail.epuc.com.br:32000/mail/settings.html',
     'http://www.@sokoyetu.co.ke/aol5/a000l.html',
 ]
 
