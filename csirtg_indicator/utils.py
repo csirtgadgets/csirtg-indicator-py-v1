@@ -23,7 +23,7 @@ RE_IPV4_CIDR = re.compile('^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5
 # http://stackoverflow.com/a/17871737
 RE_IPV6 = re.compile('(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))')
 # http://goo.gl/Cztyn2 -- probably needs more work
-RE_FQDN = re.compile('^((xn--)?(--)?[a-zA-Z0-9-_]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(--p1ai)?$')
+RE_FQDN = re.compile('^((xn--)?(--)?[a-zA-Z0-9-_@]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(--p1ai)?$')
 RE_URI_SCHEMES = re.compile('^(https?|ftp)$')
 RE_EMAIL = re.compile('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$')
 
@@ -72,7 +72,23 @@ def resolve_itype(indicator, test_broken=False):
     def _url(s):
         u = urlparse(s)
         if re.match(RE_URI_SCHEMES, u.scheme):
-            if _fqdn(u.netloc) or _ipv4(u.netloc) or _ipv6(u.netloc):
+            u = u.netloc
+
+            if _ipv6(u):
+                return True
+
+            if ':' in u:  # 192.168.1.1:81
+                u1 = u.split(':')[0]
+                if _ipv4(u1):
+                    return True
+
+                if _fqdn(u1):
+                    return True
+
+            if _fqdn(u):
+                return True
+
+            if _ipv4(u):
                 return True
 
     def _url_broken(s):
@@ -96,10 +112,10 @@ def resolve_itype(indicator, test_broken=False):
         return 'url'
     elif _hash(indicator):
         return _hash(indicator)
-    elif _fqdn(indicator):
-        return 'fqdn'
     elif _email(indicator):
         return 'email'
+    elif _fqdn(indicator):
+        return 'fqdn'
     elif _ipv4(indicator) or _ipv4_cidr(indicator):
         return 'ipv4'
     elif _ipv6(indicator):
