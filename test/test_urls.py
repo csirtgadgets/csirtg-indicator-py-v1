@@ -7,6 +7,7 @@ GOOD = [
     'http://www41.xzmnt.com',
     'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
     'http://webmail.epuc.com.br:32000/mail/settings.html',
+    'http://www.@sokoyetu.co.ke/aol5/a000l.html',
 ]
 
 
