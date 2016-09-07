@@ -33,6 +33,7 @@ setup(
         'pytest-cov>=2.2.1',
         'pendulum>=0.5.2',
         'prettytable>=0.7.2',
+        'validate-email>=1.3',
     ],
     scripts=[],
     entry_points={
