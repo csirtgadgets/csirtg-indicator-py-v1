@@ -4,12 +4,12 @@ import json
 from pprint import pprint
 
 
-def test_msg_ok():
+def test_message_ok():
     data = 'original message'
-    d = Indicator('me@example.com', msg=data)
+    d = Indicator('me@example.com', message=data)
 
     assert d.itype is 'email'
-    assert d.msg == data
+    assert d.message == data
 
     d = str(d)
 
@@ -17,5 +17,5 @@ def test_msg_ok():
 
     d = json.loads(d)
 
-    assert (b64decode(d['msg']).decode('utf-8') == data)
+    assert (b64decode(d['message']).decode('utf-8') == data)
 
