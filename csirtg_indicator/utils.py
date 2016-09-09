@@ -40,9 +40,13 @@ def resolve_itype(indicator, test_broken=False):
     def _ipv6(s):
         try:
             socket.inet_pton(socket.AF_INET6, s)
-        except socket.error:
-            if not re.match(RE_IPV6, s):
+        except socket.error as e:
+            try:
+                if ipaddress.IPv6Network(s):
+                    return True
+            except Exception as e:
                 return False
+            return False
 
         return True
 
