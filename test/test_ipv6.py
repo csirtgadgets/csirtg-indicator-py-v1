@@ -1,29 +1,37 @@
 from csirtg_indicator import Indicator
-
+from csirtg_indicator.exceptions import InvalidIndicator
 
 def _not(data):
     for d in data:
-        d = Indicator(d)
-        assert d.itype != 'ip'
+        try:
+            d = Indicator(d)
+            assert d.itype is not 'ipv6'
+        except InvalidIndicator:
+            pass
 
 
-def test_urls_ip():
-    data = ['192.168.1.0/24', '192.168.1.1', '2001:1608:10:147::21', '2001:4860:4860::8888']
-    _not(data)
+def _ok(data):
+    for d in data:
+        assert Indicator(d).itype is 'ipv6'
 
 
-def test_urls_fqdn():
-    data = ['example.org', '1.2.3.4.com', 'xn----jtbbmekqknepg3a.xn--p1ai']
-    _not(data)
-
-
-def test_urls_ok():
+def test_ipv6_ok():
     data = [
-        'http://192.168.1.1/1.html',
-        'http://www41.xzmnt.com',
-        'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe'
+        '2001:1608:10:147::21',
+        '2001:4860:4860::8888',
+        '2001:4860::8888/64',
+        '2001:4860/48'
     ]
 
-    for d in data:
-        d = Indicator(d)
-        assert d.itype == 'url'
+
+def test_ipv6_nok():
+    data = [
+        'example.com',
+        'http://example.com:81',
+        '192.168.1.1',
+        '127.0.0./1'
+    ]
+
+    _not(data)
+
+
