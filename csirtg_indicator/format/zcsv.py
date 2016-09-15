@@ -27,8 +27,10 @@ class Csv(Plugin):
                     y = u','.join(y)
 
                 if PYVERSION < 3:
-                    y = unicode(y).replace('\n', r'\\n')
-                    r[c] = y.encode('utf-8', 'ignore')
+                    r[c] = y
+                    if isinstance(r[c], basestring):
+                        r[c] = unicode(r[c]).replace('\n', r'\\n')
+                        r[c] = r[c].encode('utf-8', 'ignore')
                 else:
                     r[c] = y
                     if isinstance(r[c], basestring):
