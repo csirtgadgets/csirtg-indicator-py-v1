@@ -42,6 +42,8 @@ def resolve_itype(indicator, test_broken=False):
             socket.inet_pton(socket.AF_INET6, s)
         except socket.error as e:
             try:
+                if PYVERSION == 2:
+                    s = unicode(s)
                 if ipaddress.IPv6Network(s):
                     return True
             except Exception as e:
