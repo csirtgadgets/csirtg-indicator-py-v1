@@ -63,7 +63,6 @@ class Indicator(object):
 
         self.version = version
 
-        self.indicator = indicator
         self.tlp = tlp
         self.provider = provider
         self.reporttime = reporttime
@@ -89,6 +88,7 @@ class Indicator(object):
         self.additional_data = additional_data
         self.mask = mask
         self.rdata = rdata
+        self.indicator = indicator
 
         self.message = message
 
@@ -127,6 +127,27 @@ class Indicator(object):
         if self.itype == 'url':
             u = urlparse(self.indicator)
             self.indicator = u.geturl().rstrip('/').lower()
+
+    @property
+    def indicator(self):
+        return self.__indicator
+
+    @indicator.setter
+    def indicator(self, i):
+        self.itype = resolve_itype(i)
+        self.__indicator = i
+
+        if self.itype == 'url':
+            u = urlparse(self.__indicator)
+            self.__indicator = u.geturl().rstrip('/').lower()
+
+        if self.mask and self.itype == 'ipv4':
+            self.__indicator = '{}/{}'.format(self.__indicator, int(self.mask))
+
+    @indicator.getter
+    def indicator(self):
+        return self.__indicator
+
 
     def magic(self, data):
         for e in data:

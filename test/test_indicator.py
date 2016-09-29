@@ -1,5 +1,6 @@
 from csirtg_indicator import Indicator
 import json
+from csirtg_indicator.exceptions import InvalidIndicator
 
 def test_indicator_ipv4():
     i = Indicator('192.168.1.1')
@@ -37,3 +38,21 @@ def test_indicator_str():
     i = Indicator(**s)
 
     assert 'malware' in i.tags
+
+
+def test_get_set():
+    i = Indicator('localhost.com')
+
+    try:
+        i.indicator = 'localhost'
+    except InvalidIndicator:
+        pass
+
+    i.indicator = 'localhost.org'
+    assert i.itype == 'fqdn'
+
+    i.indicator = 'https://192.168.1.1'
+    assert i.itype == 'url'
+
+    assert str(i)
+    print(i)
