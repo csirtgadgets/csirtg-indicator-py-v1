@@ -78,7 +78,7 @@ def resolve_itype(indicator, test_broken=False):
     def _url(s):
         u = urlparse(s)
         if re.match(RE_URI_SCHEMES, u.scheme):
-            u = u.netloc
+            u = u.hostname
 
             if _ipv6(u):
                 return True
@@ -100,7 +100,7 @@ def resolve_itype(indicator, test_broken=False):
     def _url_broken(s):
         u = urlparse('{}{}'.format('http://', s))
         if re.match(RE_URI_SCHEMES, u.scheme):
-            if _fqdn(u.netloc) or _ipv4(u.netloc) or _ipv6(u.netloc):
+            if _fqdn(u.hostname) or _ipv4(u.hostname) or _ipv6(u.hostname):
                 return True
 
     def _hash(s):
@@ -165,6 +165,11 @@ def is_ipv4_net(i):
                 return False
             return True
         return False
+
+
+def url_to_fqdn(u):
+    u = urlparse(u)
+    return u.hostname
 
 
 def parse_timestamp(ts):
