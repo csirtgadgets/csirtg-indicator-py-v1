@@ -17,7 +17,8 @@ def test_fqdn_urls():
     data = [
         'http://192.168.1.1/1.html',
         'http://www41.xzmnt.com',
-        'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe'
+        'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
+        'https://example.com:443/1.html'
     ]
     _not(data)
 
