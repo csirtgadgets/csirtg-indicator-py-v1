@@ -53,5 +53,4 @@ def test_urls_ok():
 
 def test_urls_fqdns():
     for g in GOOD:
-        print(url_to_fqdn(g))
         assert url_to_fqdn(g)
