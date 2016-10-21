@@ -24,7 +24,7 @@ setup(
                "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
                "Programming Language :: Python",
                ],
-    keywords=['security'],
+    keywords=['network', 'security'],
     author="Wes Young",
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
