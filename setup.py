@@ -3,7 +3,9 @@ from setuptools import setup, find_packages
 import versioneer
 from pip.req import parse_requirements
 
-reqs = parse_requirements('requirements.txt')
+reqs = parse_requirements('requirements.txt', session=False)
+reqs = [str(ir.req) for ir in reqs]
+
 
 # vagrant doesn't appreciate hard-linking
 if os.environ.get('USER') == 'vagrant' or os.path.isdir('/vagrant'):
