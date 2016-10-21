@@ -77,7 +77,7 @@ def resolve_itype(indicator, test_broken=False):
 
     def _url(s):
         u = urlparse(s)
-        if re.match(RE_URI_SCHEMES, u.scheme):
+        if u and re.match(RE_URI_SCHEMES, str(u.scheme)):
             u = u.hostname
 
             if _ipv6(u):

@@ -17,3 +17,12 @@ notifications:
     email:
         on_success: never
         on_failure: never
+
+deploy:
+  provider: pypi
+  user: wesyoung
+  password:
+    secure: "Ti9T/rwq2rmgXHlKX0v1iYKv8gU9Sbh6afWs4sE5vmW6B9pQQzgxgOmxM0AWynky1XeuD00UxNE3LR301SyPYKNccE+rATAJ/YVAYRsB3/bF9eNywZh2nnnvseCdKgKsK/vtNoO0rPu98o+zhORDHXLDuR1+pH55ZZ6NX6bMFNebu3NyPP4hNF3rut//3LO6hI8fDQsN94s7JMbhk9Vg4F7/SNGMl4I6L9e+BaHsmy8lKKD3ZYkbNZUE1gZIji6E8NDJ4nTSsYLVgnaLyupS3B3AdHnphNDFBPI9IeCWCu6QO/j0lHnbw0iBXSN59fuiNHEdHSjtTBsZaIKjcIKH3kw98dRxYns+qs1ecQ3148EC4ySGKajnzpfzpuxEiLMbkv8SL8Wz/bp4ClX5wG1n6Bc0biItpI9gt63f7BA5/ndfKftbX7pRpJdlebUrhxYHgEqPA02h2dzUoJibWyQ+mDHn8KCUXhtRBxMGyJsXps1Mr2TVjMpSDkV2AYo16f/iGiuQA+xTi74Psx3opJ6Y6nI6UusmBI8HZ2RpXYQIYqNZG2+NmZVOM0a/qWTxps6m+bgvetCNsD7vuvUo9G/wOU8yxjnlC+sgBxy2NpNICGLsw3FipYD+4aLO/dgxlmfOheWAvKca0r66d7xwOmMBswK8M5hJi1EX6pV0hWBUVUU="
+  on:
+    tags: true
+
