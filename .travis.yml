@@ -1,29 +1,28 @@
 sudo: required
 dist: trusty
 language: python
+
 python:
-    - 2.7
-    - 3.4
-    - 3.5
+  - 2.7
+  - 3.4
+  - 3.5
 
 before_install:
-    - sudo pip install pytest-cov wheel
+  - sudo pip install pytest-cov wheel
 
 script:
-    - py.test --cov=csirtg_indicator --cov-fail-under=50
-    - python setup.py sdist bdist bdist_wheel
-
+  - py.test --cov=csirtg_indicator --cov-fail-under=50
+  - python setup.py sdist bdist bdist_wheel
 
 notifications:
-    email:
-        on_success: never
-        on_failure: never
+  email:
+    on_success: never
+    on_failure: never
 
 deploy:
   provider: pypi
   user: wesyoung
   password:
-    secure: "Ti9T/rwq2rmgXHlKX0v1iYKv8gU9Sbh6afWs4sE5vmW6B9pQQzgxgOmxM0AWynky1XeuD00UxNE3LR301SyPYKNccE+rATAJ/YVAYRsB3/bF9eNywZh2nnnvseCdKgKsK/vtNoO0rPu98o+zhORDHXLDuR1+pH55ZZ6NX6bMFNebu3NyPP4hNF3rut//3LO6hI8fDQsN94s7JMbhk9Vg4F7/SNGMl4I6L9e+BaHsmy8lKKD3ZYkbNZUE1gZIji6E8NDJ4nTSsYLVgnaLyupS3B3AdHnphNDFBPI9IeCWCu6QO/j0lHnbw0iBXSN59fuiNHEdHSjtTBsZaIKjcIKH3kw98dRxYns+qs1ecQ3148EC4ySGKajnzpfzpuxEiLMbkv8SL8Wz/bp4ClX5wG1n6Bc0biItpI9gt63f7BA5/ndfKftbX7pRpJdlebUrhxYHgEqPA02h2dzUoJibWyQ+mDHn8KCUXhtRBxMGyJsXps1Mr2TVjMpSDkV2AYo16f/iGiuQA+xTi74Psx3opJ6Y6nI6UusmBI8HZ2RpXYQIYqNZG2+NmZVOM0a/qWTxps6m+bgvetCNsD7vuvUo9G/wOU8yxjnlC+sgBxy2NpNICGLsw3FipYD+4aLO/dgxlmfOheWAvKca0r66d7xwOmMBswK8M5hJi1EX6pV0hWBUVUU="
+    secure: ZbNOPb2+tOR3ECXqOncoFfoyHIl7BxiN/Paw3sbcKRkuWv5B7vUs/Mpfl1AedIWYlUznAG7Y/SfLncwOUNSac2lIDPbw33BtMYtGaDCqay5YkJXlCamS6Id1hMdj5gvDGJzUsaimeqAx6+Gz5i9gWi7AIqmXG6bvl1lOwG3ALOXWe7yDWveOM4d9fx5RYYsd0XTSuM6Sd5fA7NGu6ViUyMvs5foyW5g4L4OCBA/N4hCCi85HTuNk2+xjwmEa2CMo+mGZVt5J2mMJeTvng07xdkHeBKbLUNBcD4jhzOGXtqfcJJCpBWGFkn4V1fX8RFcIDcVfveX/cmcfIv6c8/mVHVdY5lnB8xXSCldzdoHG2VWQKfSwMpsRAhQLdFgtB2JjsVPzN+knG2bR4E5Hf0Qql3wLpUE0zssCFhbuwKAqF9m1PG0HPG0DWCowzTRrwkc6/1sHJw9kRl+ZpgyDxFVg62nRByLm7EF0TIO8Q82XAh1ek3xcJrJ+9GO/cjtEh6ZDvDVRlfINlEWi6PR9jyYn1RshORq18wW+0qqmiBOSYEZqPCmtSLUsgZyy18523QYLqEssBC+4+qMuNizaK69UbpvAUlQ9F+A9it46KlXVwN3r734rsz1L28VEg5hlgVd2UrVnmgqW9l/THy6bGDMVsaMmd7SMYUUXNa75jPWFP/s=
   on:
     tags: true
-
