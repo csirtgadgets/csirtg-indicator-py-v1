@@ -28,7 +28,7 @@ setup(
                ],
     keywords=['network', 'security'],
     author="Wes Young",
-    author_email="wes@csirtgadgets.org",
+    author_email="wes@barely3am.com",
     packages=find_packages(),
     install_requires=reqs,
     scripts=[],
