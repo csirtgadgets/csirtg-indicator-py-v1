@@ -18,6 +18,8 @@ if sys.version_info > (3,):
 else:
     from urlparse import urlparse
 
+from pprint import pprint
+
 TLP = "green"
 GROUP = "everyone"
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
@@ -44,89 +46,68 @@ for x in IPV4_PRIVATE_NETS:
 
 class Indicator(object):
 
-    def __init__(self, indicator=None, itype=None, tlp=TLP, tags=[], group=GROUP,
-                 reporttime=arrow.get(datetime.utcnow()).datetime,
-                 provider=None,  protocol=None, portlist=None,  asn=None,
-                 firsttime=None, lasttime=None,
-                 asn_desc=None, cc=None, application=None, reference=None, reference_tlp=None, confidence=None,
-                 peers=None, city=None, longitude=None, latitude=None, timezone=None, description=None, altid=None,
-                 altid_tlp=None, additional_data=None, mask=None, rdata=None, message=None, version=PROTOCOL_VERSION,
-                 **kwargs):
-
-        if isinstance(tags, str):
-            if ',' in tags:
-                tags = tags.split(",")
-            else:
-                tags = [tags]
-
-        self.logger = logging.getLogger(__name__)
-
+    def __init__(self, indicator=None, version=PROTOCOL_VERSION, **kwargs):
         self.version = version
 
-        self.tlp = tlp
-        self.provider = provider
-        self.reporttime = reporttime
-        self.group = group
-        self.itype = itype
-        self.protocol = protocol
-        self.portlist = portlist
-        self.tags = tags
-        self.application = application
-        self.reference = reference
-        self.reference_tlp = reference_tlp
-        self.confidence = confidence
-        self.firsttime = firsttime
-        self.lasttime = lasttime
-        self.peers = peers
-        self.longitude = longitude
-        self.latitude = latitude
-        self.city = city
-        self.timezone = timezone
-        self.description = description
-        self.altid = altid
-        self.altid_tlp = altid_tlp
-        self.additional_data = additional_data
-        self.mask = mask
-        self.rdata = rdata
-        self.indicator = indicator
+        self.tlp = kwargs.get('tlp')
+        self.provider = kwargs.get('provider')
+        self.reporttime = kwargs.get('reporttime')
+        self.group = kwargs.get('group')
+        self.itype = kwargs.get('itype')
+        self.protocol = kwargs.get('protocol')
+        self.portlist = kwargs.get('portlist')
+        self.tags = kwargs.get('tags')
+        self.application = kwargs.get('application')
+        self.reference = kwargs.get('reference')
+        self.reference_tlp = kwargs.get('reference_tlp')
+        self.confidence = kwargs.get('confidence')
+        self.firsttime = kwargs.get('firsttime')
+        self.lasttime = kwargs.get('lasttime')
+        self.peers = kwargs.get('peers')
+        self.longitude = kwargs.get('longitude')
+        self.latitude = kwargs.get('latitude')
+        self.city = kwargs.get('city')
+        self.cc = kwargs.get('cc')
+        self.timezone = kwargs.get('timezone')
+        self.description = kwargs.get('description')
+        self.altid = kwargs.get('altid')
+        self.altid_tlp = kwargs.get('altid_tlp')
+        self.additional_data = kwargs.get('additional_data')
+        self.mask = kwargs.get('mask')
+        self.rdata = kwargs.get('rdata')
+        self.asn_desc = kwargs.get('asn_desc')
+        self.asn = kwargs.get('asn')
 
-        self.message = message
+        self.message = kwargs.get('message')
+
+        if self.tags and isinstance(self.tags, str):
+            self.tags = self.tags.split(',')
 
         if self.description:
             self.description = self.description.replace('\"', '').lower()
 
-        if timezone:
-            self.timezone = timezone.lower()
+        if self.timezone:
+            self.timezone = self.timezone.lower()
 
-        if reporttime and isinstance(reporttime, str):
-            self.reporttime = parse_timestamp(reporttime).datetime
+        if self.reporttime and isinstance(self.reporttime, str):
+            self.reporttime = parse_timestamp(self.reporttime).datetime
 
-        if firsttime:
-            self.firsttime = parse_timestamp(firsttime).datetime
+        if self.firsttime:
+            self.firsttime = parse_timestamp(self.firsttime).datetime
 
-        if lasttime:
-            self.lasttime = parse_timestamp(lasttime).datetime
+        if self.lasttime:
+            self.lasttime = parse_timestamp(self.lasttime).datetime
 
-        if asn and asn.lower() == 'na':
-            asn = None
+        if self.asn and self.asn.lower() == 'na':
+            self.asn = None
 
-        self.asn = asn
+        self.asn = self.asn
 
-        if asn_desc and asn_desc.lower() == 'na':
-            asn_desc = None
+        if self.asn_desc and self.asn_desc.lower() == 'na':
+            self.asn_desc = None
 
-        self.asn_desc = asn_desc
-        self.cc = cc
-
-        if self.indicator and not itype:
-            self.itype = resolve_itype(self.indicator)
-
-        if self.mask and self.itype == 'ipv4':
-            self.indicator = '{}/{}'.format(self.indicator, int(self.mask))
-
-        if self.itype == 'url':
-            u = urlparse(self.indicator)
-            self.indicator = u.geturl().rstrip('/').lower()
+        self._indicator = None
+        self.indicator = indicator
 
     @property
     def indicator(self):
@@ -135,19 +116,18 @@ class Indicator(object):
     @indicator.setter
     def indicator(self, i):
         self.itype = resolve_itype(i)
-        self.__indicator = i
+        self._indicator = i
 
         if self.itype == 'url':
-            u = urlparse(self.__indicator)
-            self.__indicator = u.geturl().rstrip('/').lower()
+            u = urlparse(self._indicator)
+            self._indicator = u.geturl().rstrip('/').lower()
 
-        if self.mask and self.itype == 'ipv4':
-            self.__indicator = '{}/{}'.format(self.__indicator, int(self.mask))
+        if self.mask and (self.itype == 'ipv4' or self.itype == 'ipv6'):
+            self._indicator = '{}/{}'.format(self._indicator, int(self.mask))
 
     @indicator.getter
     def indicator(self):
-        return self.__indicator
-
+        return self._indicator
 
     def magic(self, data):
         for e in data:

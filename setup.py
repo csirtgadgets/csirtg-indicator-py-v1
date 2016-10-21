@@ -1,6 +1,9 @@
 import os
 from setuptools import setup, find_packages
 import versioneer
+from pip.req import parse_requirements
+
+reqs = parse_requirements('requirements.txt')
 
 # vagrant doesn't appreciate hard-linking
 if os.environ.get('USER') == 'vagrant' or os.path.isdir('/vagrant'):
@@ -25,15 +28,7 @@ setup(
     author="Wes Young",
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
-    install_requires=[
-        'arrow>=0.7.0',
-        'pytest>=2.9.1',
-        'pytricia>=0.9.0',
-        'ipaddress>=1.0.16',
-        'pytest-cov>=2.2.1',
-        'pendulum>=0.5.2',
-        'prettytable>=0.7.2',
-    ],
+    install_requires=reqs,
     scripts=[],
     entry_points={
        'console_scripts': [

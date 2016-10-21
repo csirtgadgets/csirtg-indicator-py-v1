@@ -1,6 +1,7 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
 
+
 def _not(data):
     for d in data:
         d = Indicator(d)
@@ -45,9 +46,13 @@ def test_ipv4_nok():
 
 def test_ipv4_private():
     data = [
-        '128.205.1.0/24', '2001:1608:10:147::21', '2001:4860:4860::8888',
-        u'106.51.30.0', '112.133.246.73'
+        '128.205.1.0',
+        '2001:1608:10:147::21',
+        '2001:4860:4860::8888',
+        u'106.51.30.0',
+        '112.133.246.73'
     ]
+
     for d in data:
         assert not Indicator(indicator=d).is_private()
 
