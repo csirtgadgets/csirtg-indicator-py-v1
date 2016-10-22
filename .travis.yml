@@ -3,16 +3,16 @@ dist: trusty
 language: python
 
 python:
-  - 2.7
-  - 3.4
-  - 3.5
+    - 2.7
+    - 3.4
+    - 3.5
 
 before_install:
-  - sudo pip install pytest-cov wheel
+    - sudo pip install pytest-cov wheel
 
 script:
-  - py.test --cov=csirtg_indicator --cov-fail-under=50
-  - python setup.py sdist bdist bdist_wheel
+    - py.test --cov=csirtg_indicator --cov-fail-under=50
+    - python setup.py sdist bdist bdist_wheel
 
 notifications:
   email:
@@ -20,11 +20,12 @@ notifications:
     on_failure: never
 
 deploy:
-  provider: pypi
-  user: wesyoung
-  password:
-    secure: ZbNOPb2+tOR3ECXqOncoFfoyHIl7BxiN/Paw3sbcKRkuWv5B7vUs/Mpfl1AedIWYlUznAG7Y/SfLncwOUNSac2lIDPbw33BtMYtGaDCqay5YkJXlCamS6Id1hMdj5gvDGJzUsaimeqAx6+Gz5i9gWi7AIqmXG6bvl1lOwG3ALOXWe7yDWveOM4d9fx5RYYsd0XTSuM6Sd5fA7NGu6ViUyMvs5foyW5g4L4OCBA/N4hCCi85HTuNk2+xjwmEa2CMo+mGZVt5J2mMJeTvng07xdkHeBKbLUNBcD4jhzOGXtqfcJJCpBWGFkn4V1fX8RFcIDcVfveX/cmcfIv6c8/mVHVdY5lnB8xXSCldzdoHG2VWQKfSwMpsRAhQLdFgtB2JjsVPzN+knG2bR4E5Hf0Qql3wLpUE0zssCFhbuwKAqF9m1PG0HPG0DWCowzTRrwkc6/1sHJw9kRl+ZpgyDxFVg62nRByLm7EF0TIO8Q82XAh1ek3xcJrJ+9GO/cjtEh6ZDvDVRlfINlEWi6PR9jyYn1RshORq18wW+0qqmiBOSYEZqPCmtSLUsgZyy18523QYLqEssBC+4+qMuNizaK69UbpvAUlQ9F+A9it46KlXVwN3r734rsz1L28VEg5hlgVd2UrVnmgqW9l/THy6bGDMVsaMmd7SMYUUXNa75jPWFP/s=
-  on:
-    branch: master
-    tags: true
-    condition: $TRAVIS_PYTHON_VERSION = "3.5"
+    provider: pypi
+    user: wesyoung
+    password:
+        secure: NhxGn+hNgDKqbuQ9DrBhCjaThTeYkoj0TDuFb/dxqOps8bH6334t3ZfpYe3oVYecWpWABKKdX5AVS3uoSya/wo/2+XUbxO0AY9/fFlkGXV+PtwlOF828eEq8mh7JRqMZFS5lzHkpmiVeg5a2zZd2bq+4KcIUovCqnh4Dc8obJnPdgrATNdLEUJ4ggpGmgCn0OwbZ8LjoYVodU2teZ8t9PBSYzsPmoniFX1js6FwUg8t33m/3ce7pIrFnH5hfW7u86PrCvzcIX0wrLA6KNSsfW7nYlqRgsnwXJbSsjk2dENcE1yJk6GiSo0QmaOPz7+q4J3BnpZ6L79uuMjjd/dyfVkQy1tg6t0wLrBcI/sB9pWQwJT4qhv+Bt0di3sjbaJZRe8Hln7exz4hMRavEpAHZ6FNz/Xd45eygXt0IO27I6s1ebRAqAIQdvFX/OSdhyoxJDrQTVgVQrSAS0luuBq1ACQOWwlk4sz3p4zqRg0tggIFIdwO2N+tMB/TjoY2DAy3FxpBhEIUUq8LN8usFKbdOUEcXxGJ5axZRd3GRJO52X/rqiSrDCDSNv8Z/T16nXwh1scf4HhwLo0MEyxGyy2GsgUFbH3g8oDCXMj16A8E4LEw2XZ4n1k8cJytCX+PBLWMkFdmToF+QnLPO1pD8pErOoxib7dZZY/B4gOJuEXd5kHk=
+    on:
+        branch: staging
+        tags: true
+        condition: $TRAVIS_PYTHON_VERSION = "3.5"
+        distributions: sdist
