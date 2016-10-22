@@ -1,0 +1,5 @@
+arrow>=0.7.0
+pytricia>=0.9.0
+ipaddress>=1.0.16
+pendulum>=0.5.2
+prettytable>=0.7.2
