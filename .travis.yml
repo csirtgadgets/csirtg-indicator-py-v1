@@ -9,9 +9,10 @@ python:
 
 before_install:
     - sudo pip install pytest-cov wheel
+    - pip install -r dev_requirements.txt
 
 script:
-    - py.test --cov=csirtg_indicator --cov-fail-under=50
+    - python setup.py test
     - python setup.py sdist bdist bdist_wheel
 
 notifications:
