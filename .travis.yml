@@ -28,4 +28,4 @@ deploy:
         branch: staging
         tags: true
         condition: $TRAVIS_PYTHON_VERSION = "3.5"
-        distributions: sdist
+        #distributions: sdist
