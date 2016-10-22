@@ -7,11 +7,12 @@ import sys
 if os.environ.get('USER') == 'vagrant' or os.path.isdir('/vagrant'):
     del os.link
 
+# https://www.pydanny.com/python-dot-py-tricks.html
 if sys.argv[-1] == 'test':
     test_requirements = [
-        'pytest>=2.9.1',
-        'coverage>=4.2',
-        'pytest-cov>=2.2.1',
+        'pytest',
+        'coverage',
+        'pytest_cov',
     ]
     try:
         modules = map(__import__, test_requirements)
