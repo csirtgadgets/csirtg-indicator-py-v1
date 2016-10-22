@@ -1,10 +1,26 @@
 import os
 from setuptools import setup, find_packages
 import versioneer
+import sys
 
 # vagrant doesn't appreciate hard-linking
 if os.environ.get('USER') == 'vagrant' or os.path.isdir('/vagrant'):
     del os.link
+
+if sys.argv[-1] == 'test':
+    test_requirements = [
+        'pytest>=2.9.1',
+        'coverage>=4.2',
+        'pytest-cov>=2.2.1',
+    ]
+    try:
+        modules = map(__import__, test_requirements)
+    except ImportError as e:
+        err_msg = e.message.replace("No module named ", "")
+        msg = "%s is not installed. Install your test requirments." % err_msg
+        raise ImportError(msg)
+    os.system('py.test test -v --cov=csirtg_indicator --cov-fail-under=50')
+    sys.exit()
 
 setup(
     name="csirtg_indicator",
@@ -26,15 +42,12 @@ setup(
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
     install_requires=[
-        'arrow==0.7.0',
-        'pytest==2.9.1',
-        'pytricia==0.9.0',
-        'ipaddress==1.0.16',
-        'pytest-cov==2.2.1',
-        'pendulum==0.5.2',
-        'prettytable==0.7.2'
+        'arrow>=0.7.0',
+        'pytricia>=0.9.0',
+        'ipaddress>=1.0.16',
+        'pendulum>=0.5.2',
+        'prettytable>=0.7.2',
     ],
-    scripts=[],
     entry_points={
        'console_scripts': [
            'csirtg-indicator=csirtg_indicator.indicator:main',

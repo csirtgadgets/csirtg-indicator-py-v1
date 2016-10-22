@@ -1,2 +1,3 @@
 include versioneer.py
 include csirtg/indicator/_version.py
+include dev_requirements.txt
