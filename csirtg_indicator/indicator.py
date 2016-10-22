@@ -107,7 +107,8 @@ class Indicator(object):
             self.asn_desc = None
 
         self._indicator = None
-        self.indicator = indicator
+        if indicator:
+            self.indicator = indicator
 
     @property
     def indicator(self):
