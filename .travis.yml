@@ -8,7 +8,6 @@ python:
     - 3.5
 
 before_install:
-    - sudo pip install pytest-cov wheel
     - pip install -r dev_requirements.txt
 
 script:
