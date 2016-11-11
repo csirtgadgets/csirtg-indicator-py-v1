@@ -49,15 +49,21 @@ def resolve_itype(indicator, test_broken=False):
             except Exception as e:
                 return False
             return False
+        except Exception as e:
+            return False
 
         return True
 
     def _ipv4(s):
+
         try:
             socket.inet_pton(socket.AF_INET, s)
         except socket.error:
             if not re.match(RE_IPV4, s):
                 return False
+        except Exception as e:
+            return False
+
         return True
 
     def _ipv4_cidr(s):
@@ -98,7 +104,10 @@ def resolve_itype(indicator, test_broken=False):
                 return True
 
     def _url_broken(s):
+        if PYVERSION == 2:
+            s = s.encode('utf-8')
         u = urlparse('{}{}'.format('http://', s))
+
         if re.match(RE_URI_SCHEMES, u.scheme):
             if _fqdn(u.hostname) or _ipv4(u.hostname) or _ipv6(u.hostname):
                 return True
@@ -127,11 +136,18 @@ def resolve_itype(indicator, test_broken=False):
     elif _ipv6(indicator):
         return 'ipv6'
 
-    raise InvalidIndicator('unknown itype for "{}"'.format(indicator))
+    try:
+        error = 'unknown itype for "{}"'.format(indicator)
+    except UnicodeEncodeError:
+        error = 'unknown itype for "{}"'.format(indicator.encode('utf-8'))
+
+    raise InvalidIndicator(error)
 
 
 def _normalize_url(i):
     if resolve_itype(i['indicator'], test_broken=True) == 'broken_url':
+        if PYVERSION == 2:
+            i['indicator'] = i['indicator'].encode('utf-8')
         i['indicator'] = '{}{}'.format('http://', i['indicator'])
 
     return i

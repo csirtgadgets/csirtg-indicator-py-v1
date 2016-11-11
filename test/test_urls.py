@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
 from csirtg_indicator.utils import url_to_fqdn
@@ -10,7 +11,8 @@ GOOD = [
     # 'http://webmail.epuc.com.br:32000/mail/settings.html',
     'http://www.@sokoyetu.co.ke/aol5/a000l.html',
     'https://example.com:443/1.html',
-    'http://test1.test2.example.com'
+    'http://test1.test2.example.com',
+    'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60'
 ]
 
 
