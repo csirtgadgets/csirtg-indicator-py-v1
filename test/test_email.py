@@ -33,3 +33,7 @@ def test_email_ok():
     for d in data:
         d = Indicator(d)
         assert d.itype is 'email'
+
+    i = Indicator('WES@barely3am.com')
+    assert i.indicator == 'wes@barely3am.com'
+

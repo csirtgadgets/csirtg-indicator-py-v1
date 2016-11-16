@@ -117,6 +117,7 @@ class Indicator(object):
 
     @indicator.setter
     def indicator(self, i):
+        i = i.lower()
         self.itype = resolve_itype(i)
         self._indicator = i
 
