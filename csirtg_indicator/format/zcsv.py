@@ -1,5 +1,6 @@
 import csv
 from csirtg_indicator.constants import PYVERSION
+from csirtg_indicator import Indicator
 
 try:
     from StringIO import StringIO
@@ -19,10 +20,13 @@ class Csv(Plugin):
         csvWriter = csv.DictWriter(output, self.cols, quoting=csv.QUOTE_ALL)
         csvWriter.writeheader()
 
-        for obs in reversed(self.data):
+        for i in reversed(self.data):
+            if isinstance(i, Indicator):
+                i = i.__dict__()
+
             r = dict()
             for c in self.cols:
-                y = obs.get(c, u'')
+                y = i.get(c, u'')
                 if type(y) is list:
                     y = u','.join(y)
 

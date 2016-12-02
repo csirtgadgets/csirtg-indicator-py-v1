@@ -37,8 +37,10 @@ class Bro(Plugin):
 
             for c in self.cols:
                 y = i.get(c, '-')
+
                 if type(y) is list:
                     y = SEP.join(y)
+
                 y = str(y)
                 if c is 'itype':
                     y = 'Intel::{0}'.format(itype[i[c]])
