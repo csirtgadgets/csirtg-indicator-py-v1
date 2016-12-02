@@ -1,5 +1,6 @@
 from .plugin import Plugin
 import re
+from csirtg_indicator import Indicator
 
 from pprint import pprint
 
@@ -26,18 +27,21 @@ class Bro(Plugin):
 
     def __repr__(self):
         text = []
-        for d in self.data:
+        for i in self.data:
+            if isinstance(i, Indicator):
+                i = i.__dict__()
+
             r = []
-            if d['itype'] is 'url':
-                d['indicator'] = re.sub(r'(https?\:\/\/)', '', d['indicator'])
+            if i['itype'] is 'url':
+                i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
 
             for c in self.cols:
-                y = d.get(c, '-')
+                y = i.get(c, '-')
                 if type(y) is list:
                     y = SEP.join(y)
                 y = str(y)
                 if c is 'itype':
-                    y = 'Intel::{0}'.format(itype[d[c]])
+                    y = 'Intel::{0}'.format(itype[i[c]])
                 r.append(y)
 
             # do_notice

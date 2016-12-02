@@ -1,5 +1,6 @@
 from .plugin import Plugin
 import os
+from csirtg_indicator import Indicator
 
 SID = os.environ.get('CSIRTG_INDICATOR_SNORT_SID', 5000000000)
 THRESHOLD = os.environ.get('CSIRTG_INDICATOR_SNORT_THRESHOLD', 'type limit,track by_src,count 1,seconds 3600')
@@ -40,42 +41,45 @@ class Snort(Plugin):
     def __repr__(self):
         text = []
         sid = SID
-        for d in self.data:
+        for i in self.data:
+            if isinstance(i, Indicator):
+                i = i.__dict__()
+
             portlist = 'any'
-            if d.get('portlist') and d['portlist'] is not None:
-                porlist = str(d['portlist'])
+            if i.get('portlist') and i['portlist'] is not None:
+                portlist = str(i['portlist'])
 
             r = {
                 'action': 'alert',
-                'proto': d.get('protocol', 'IP'),
+                'proto': i.get('protocol', 'IP'),
                 'src': SRC,
                 'sport': 'any',
                 'dir': '->',
-                'dst': d['indicator'],
+                'dst': i['indicator'],
                 'dport': portlist,
             }
 
             opts = {
-                'msg': '{} - {} - {}'.format(MSG_PREFIX, TLP_DEFAULT, ','.join(d['tags'])),
+                'msg': '{} - {} - {}'.format(MSG_PREFIX, TLP_DEFAULT, ','.join(i['tags'])),
                 'sid': sid,
                 'threshold': THRESHOLD,
                 'classtype': CLASSTYPE,
-                'reference': d.get('altid', ''),
+                'reference': i.get('altid', ''),
                 'priority': PRIORITY,
                 'tag': TAG,
 
             }
 
-            if d['itype'] == 'ipv4':
+            if i['itype'] == 'ipv4':
                 pass
 
-            if d['itype'] == 'ipv4':
+            if i['itype'] == 'ipv4':
                 pass
 
-            if d['itype'] == 'fqdn':
+            if i['itype'] == 'fqdn':
                 pass
 
-            if d['itype'] == 'url':
+            if i['itype'] == 'url':
                 pass
 
             text.append(self._dict_to_rule(r, opts))

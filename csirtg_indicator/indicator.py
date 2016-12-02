@@ -4,6 +4,7 @@ import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime
+import codecs
 
 import arrow
 import pytricia
@@ -13,6 +14,7 @@ import sys
 from .exceptions import InvalidIndicator
 from base64 import b64encode, b64decode
 from zlib import compress,decompress
+from .constants import PYVERSION
 
 if sys.version_info > (3,):
     from urllib.parse import urlparse
@@ -117,6 +119,9 @@ class Indicator(object):
 
     @indicator.setter
     def indicator(self, i):
+        if PYVERSION == 2:
+            i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
+
         i = i.lower()
         self.itype = resolve_itype(i)
         self._indicator = i
@@ -155,7 +160,7 @@ class Indicator(object):
         return json.loads(s)
 
     def __repr__(self):
-        o = {
+        i = {
             "version": self.version,
             "indicator": self.indicator,
             "itype": self.itype,
@@ -177,7 +182,9 @@ class Indicator(object):
             'latitude': self.latitude,
             'description': self.description,
             'additional_data': self.additional_data,
-            'rdata': self.rdata
+            'rdata': self.rdata,
+            'altid': self.altid,
+            'altid_tlp': self.altid_tlp
         }
 
         if self.tags:
@@ -186,36 +193,39 @@ class Indicator(object):
                     self.tags = self.tags.split(",")
                 else:
                     self.tags = [self.tags]
-            o['tags'] = self.tags
+            i['tags'] = self.tags
 
         if self.timezone:
-            o['timezone'] = self.timezone.lower()
+            i['timezone'] = self.timezone.lower()
 
         if self.reporttime and isinstance(self.reporttime, datetime):
-            o['reporttime'] = self.reporttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            i['reporttime'] = self.reporttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         else:
-            o['reporttime'] = self.reporttime
+            i['reporttime'] = self.reporttime
 
         if self.firsttime and isinstance(self.firsttime, datetime):
-            o['firsttime'] = self.firsttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            i['firsttime'] = self.firsttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         else:
-            o['firsttime'] = self.firsttime
+            i['firsttime'] = self.firsttime
 
         if self.lasttime and isinstance(self.lasttime, datetime):
-            o['lasttime'] = self.lasttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            i['lasttime'] = self.lasttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
         else:
-            o['lasttime'] = self.lasttime
+            i['lasttime'] = self.lasttime
 
         if self.message:
             if isinstance(self.message, str):
-                self.message = self.message.encode("utf-8")
+                if PYVERSION == 2:
+                    self.messge = codecs.unicode_escape_encode(self.message.decode('utf-8'))[0]
+                else:
+                    self.message = self.message.encode("utf-8")
 
             self.message = b64encode(self.message)
-            o['message'] = self.message.decode('utf-8')  # make json parser happy
+            i['message'] = self.message.decode('utf-8')  # make json parser happy
         try:
-            return json.dumps(o, sort_keys=True, indent=4, separators=(',', ': '))
+            return json.dumps(i, sort_keys=True, indent=4, separators=(',', ': '))
         except UnicodeDecodeError as e:
-            o['asn_desc'] = unicode(o['asn_desc'].decode('latin-1'))
+            i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
             return json.dumps(o, sort_keys=True, indent=4, separators=(',', ': '))
 
 
