@@ -1,8 +1,9 @@
 from prettytable import PrettyTable
 from pprint import pprint
 from .plugin import Plugin
-from csirtg_indicator.utils import parse_timestamp
 import arrow
+from csirtg_indicator.constants import PYVERSION
+from csirtg_indicator import Indicator
 
 
 class Table(Plugin):
@@ -11,21 +12,15 @@ class Table(Plugin):
     def __repr__(self):
         t = PrettyTable(self.cols)
         t.align['provider'] = 'l'
-        for obs in reversed(self.data):
+        for i in reversed(self.data):
+            if isinstance(i, Indicator):
+                i = i.__dict__()
+
             r = []
             for c in self.cols:
-                y = obs.get(c, '')
+                y = i.get(c, '')
                 if type(y) is list:
                     y = ','.join(y)
-
-                # http://stackoverflow.com/questions/3224268/python-unicode-encode-error
-                # http://stackoverflow.com/questions/19833440/unicodeencodeerror-ascii-codec-cant-encode-character-u-xe9-in-position-7
-                try:
-                    if type(y) is unicode:
-                        y = y.encode('ascii', 'ignore')
-                except NameError:
-                    # python3
-                    pass
 
                 if y and (c in ['firsttime', 'lasttime', 'reporttime']):
                     y = arrow.get(y).format('YYYY-MM-DDTHH:mm:ss.SSSSS')

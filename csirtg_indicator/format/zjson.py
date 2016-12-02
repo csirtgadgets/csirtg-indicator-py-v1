@@ -1,5 +1,6 @@
 import json
 from .plugin import Plugin
+from csirtg_indicator import Indicator
 
 
 class Json(Plugin):
@@ -7,10 +8,13 @@ class Json(Plugin):
     def __repr__(self):
         output = []
         
-        for obs in reversed(self.data):
+        for i in reversed(self.data):
+            if isinstance(i, Indicator):
+                i = i.__dict__()
+
             r = dict()
             for c in self.cols:
-                y = obs.get(c, u'')
+                y = i.get(c, u'')
                 if type(y) is list:
                     y = u','.join(y)
                 
@@ -18,4 +22,4 @@ class Json(Plugin):
                 
             output.append(r)
             
-        return json.dumps(self.data)
+        return json.dumps(output)
