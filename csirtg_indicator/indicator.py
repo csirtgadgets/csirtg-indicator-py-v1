@@ -226,7 +226,7 @@ class Indicator(object):
             return json.dumps(i, sort_keys=True, indent=4, separators=(',', ': '))
         except UnicodeDecodeError as e:
             i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
-            return json.dumps(o, sort_keys=True, indent=4, separators=(',', ': '))
+            return json.dumps(i, sort_keys=True, indent=4, separators=(',', ': '))
 
 
 def main():
