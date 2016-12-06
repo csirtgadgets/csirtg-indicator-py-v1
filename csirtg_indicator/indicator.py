@@ -15,6 +15,7 @@ from .exceptions import InvalidIndicator
 from base64 import b64encode, b64decode
 from zlib import compress,decompress
 from .constants import PYVERSION
+import logging
 
 if sys.version_info > (3,):
     from urllib.parse import urlparse
@@ -27,6 +28,10 @@ TLP = "green"
 GROUP = "everyone"
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 PROTOCOL_VERSION = '0.00a0'
+FIELDS = ['version', 'indicator', 'itype', 'tlp', 'provider', 'portlist', 'protocol', 'asn', 'asn_desc', 'cc', 'group',
+          'reference', 'reference_tlp', 'application', 'confidence', 'peers', 'city', 'longitude', 'latitude',
+          'description', 'additional_data', 'rdata', 'altid', 'altid_tlp', 'firsttime', 'lasttime', 'reporttime',
+          'message']
 
 
 IPV4_PRIVATE = pytricia.PyTricia()
@@ -222,11 +227,21 @@ class Indicator(object):
 
             self.message = b64encode(self.message)
             i['message'] = self.message.decode('utf-8')  # make json parser happy
-        try:
-            return json.dumps(i, sort_keys=True, indent=4, separators=(',', ': '))
-        except UnicodeDecodeError as e:
-            i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
-            return json.dumps(i, sort_keys=True, indent=4, separators=(',', ': '))
+
+        i2 = {k: v for (k, v) in i.items() if v is not None}
+
+        if logging.getLogger('').getEffectiveLevel() == logging.DEBUG:
+            try:
+                return json.dumps(i2, indent=4, separators=(',', ': '))
+            except UnicodeDecodeError as e:
+                i['asn_desc'] = unicode(i2['asn_desc'].decode('latin-1'))
+                return json.dumps(i2, indent=4, sort_keys=True, separators=(',', ': '))
+        else:
+            try:
+                return json.dumps(i2, separators=(',', ': '))
+            except UnicodeDecodeError as e:
+                i['asn_desc'] = unicode(i2['asn_desc'].decode('latin-1'))
+                return json.dumps(i2, separators=(',', ': '))
 
 
 def main():
