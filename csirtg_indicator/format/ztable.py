@@ -19,6 +19,7 @@ class Table(Plugin):
             r = []
             for c in self.cols:
                 y = i.get(c, '')
+
                 if type(y) is list:
                     y = ','.join(y)
 
@@ -28,6 +29,7 @@ class Table(Plugin):
                 else:
                     y = str(y)
                 y = (y[:self.max_field_size] + '..') if len(y) > self.max_field_size else y
+
                 r.append(y)
             t.add_row(r)
         return str(t)

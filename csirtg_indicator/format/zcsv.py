@@ -27,6 +27,7 @@ class Csv(Plugin):
             r = dict()
             for c in self.cols:
                 y = i.get(c, u'')
+
                 if type(y) is list:
                     y = u','.join(y)
 
@@ -39,7 +40,8 @@ class Csv(Plugin):
                     r[c] = y
                     if isinstance(r[c], basestring):
                         r[c] = r[c].replace('\n', r'\\n')
-                
+
+
             csvWriter.writerow(r)
         
         return output.getvalue().strip('\r\n')

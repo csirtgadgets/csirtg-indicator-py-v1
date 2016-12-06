@@ -31,7 +31,7 @@ PROTOCOL_VERSION = '0.00a0'
 FIELDS = ['version', 'indicator', 'itype', 'tlp', 'provider', 'portlist', 'protocol', 'asn', 'asn_desc', 'cc', 'group',
           'reference', 'reference_tlp', 'application', 'confidence', 'peers', 'city', 'longitude', 'latitude',
           'description', 'additional_data', 'rdata', 'altid', 'altid_tlp', 'firsttime', 'lasttime', 'reporttime',
-          'message']
+          'message', 'count']
 
 
 IPV4_PRIVATE = pytricia.PyTricia()
@@ -85,6 +85,7 @@ class Indicator(object):
         self.rdata = kwargs.get('rdata')
         self.asn_desc = kwargs.get('asn_desc')
         self.asn = kwargs.get('asn')
+        self.count = kwargs.get('count')
 
         self.message = kwargs.get('message')
 
@@ -189,7 +190,8 @@ class Indicator(object):
             'additional_data': self.additional_data,
             'rdata': self.rdata,
             'altid': self.altid,
-            'altid_tlp': self.altid_tlp
+            'altid_tlp': self.altid_tlp,
+            'count': self.count
         }
 
         if self.tags:
