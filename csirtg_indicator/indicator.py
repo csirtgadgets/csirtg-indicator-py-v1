@@ -230,21 +230,18 @@ class Indicator(object):
             self.message = b64encode(self.message)
             i['message'] = self.message.decode('utf-8')  # make json parser happy
 
-        i2 = {k: v for (k, v) in i.items() if v is not None}
+        i = {k: v for (k, v) in i.items() if v is not None}
 
+        sort_keys = False
+        indent = None
         if logging.getLogger('').getEffectiveLevel() == logging.DEBUG:
-            try:
-                return json.dumps(i2, indent=4, separators=(',', ': '))
-            except UnicodeDecodeError as e:
-                i['asn_desc'] = unicode(i2['asn_desc'].decode('latin-1'))
-                return json.dumps(i2, indent=4, sort_keys=True, separators=(',', ': '))
-        else:
-            try:
-                return json.dumps(i2, separators=(',', ': '))
-            except UnicodeDecodeError as e:
-                i['asn_desc'] = unicode(i2['asn_desc'].decode('latin-1'))
-                return json.dumps(i2, separators=(',', ': '))
-
+            sort_keys = True
+            indent = 4
+        try:
+            return json.dumps(i, indent=indent, sort_keys=sort_keys, separators=(',', ': '))
+        except UnicodeDecodeError as e:
+            i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
+            return json.dumps(i, indent=indent, sort_keys=sort_keys, separators=(',', ': '))
 
 def main():
     p = ArgumentParser(
