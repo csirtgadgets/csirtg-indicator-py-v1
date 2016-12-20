@@ -161,6 +161,23 @@ class Indicator(object):
     def is_subdomain(self):
         return is_subdomain(self.indicator)
 
+    def format_keys(self):
+        d = self.__dict__()
+        for k in d:
+            if PYVERSION == 2:
+                if not isinstance(d[k], unicode):
+                    continue
+            else:
+                if not isinstance(d[k], str):
+                    continue
+
+            if '{' not in d[k]:
+                continue
+
+            d[k] = d[k].format(**d)
+
+        return Indicator(**d)
+
     def __dict__(self):
         s = str(self)
         return json.loads(s)

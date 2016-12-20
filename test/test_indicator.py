@@ -56,3 +56,11 @@ def test_get_set():
 
     assert str(i)
     print(i)
+
+
+def test_format_indicator():
+    i = Indicator('example.com')
+    i.altid = 'https://csirtg.io/search?q={indicator}'
+
+    i = i.format_keys()
+    assert i.altid == 'https://csirtg.io/search?q=example.com'
