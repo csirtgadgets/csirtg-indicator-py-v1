@@ -64,3 +64,8 @@ def test_format_indicator():
 
     i = i.format_keys()
     assert i.altid == 'https://csirtg.io/search?q=example.com'
+
+
+def test_indicator_dest():
+    i = Indicator(indicator='192.168.1.1', dest='10.0.0.1', portlist="23", protocol="tcp")
+    assert i.dest

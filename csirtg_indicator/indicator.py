@@ -64,6 +64,7 @@ class Indicator(object):
         self.itype = kwargs.get('itype')
         self.protocol = kwargs.get('protocol')
         self.portlist = kwargs.get('portlist')
+        self.dest = kwargs.get('dest')
         self.tags = kwargs.get('tags')
         self.application = kwargs.get('application')
         self.reference = kwargs.get('reference')
@@ -186,6 +187,7 @@ class Indicator(object):
         i = {
             "version": self.version,
             "indicator": self.indicator,
+            'dest': self.dest,
             "itype": self.itype,
             "tlp": self.tlp,
             "provider": self.provider,
@@ -259,6 +261,7 @@ class Indicator(object):
         except UnicodeDecodeError as e:
             i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
             return json.dumps(i, indent=indent, sort_keys=sort_keys, separators=(',', ': '))
+
 
 def main():
     p = ArgumentParser(
