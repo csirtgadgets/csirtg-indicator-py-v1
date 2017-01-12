@@ -67,5 +67,6 @@ def test_format_indicator():
 
 
 def test_indicator_dest():
-    i = Indicator(indicator='192.168.1.1', dest='10.0.0.1', portlist="23", protocol="tcp")
+    i = Indicator(indicator='192.168.1.1', dest='10.0.0.1', portlist="23", protocol="tcp", dest_portlist='21,22-23')
     assert i.dest
+    assert i.dest_portlist

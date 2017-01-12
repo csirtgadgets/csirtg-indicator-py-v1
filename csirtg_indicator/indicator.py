@@ -65,6 +65,7 @@ class Indicator(object):
         self.protocol = kwargs.get('protocol')
         self.portlist = kwargs.get('portlist')
         self.dest = kwargs.get('dest')
+        self.dest_portlist = kwargs.get('dest_portlist')
         self.tags = kwargs.get('tags')
         self.application = kwargs.get('application')
         self.reference = kwargs.get('reference')
@@ -188,6 +189,7 @@ class Indicator(object):
             "version": self.version,
             "indicator": self.indicator,
             'dest': self.dest,
+            'dest_portlist': self.dest_portlist,
             "itype": self.itype,
             "tlp": self.tlp,
             "provider": self.provider,
