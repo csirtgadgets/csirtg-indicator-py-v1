@@ -76,17 +76,13 @@ def _indicator_to_rule(i, sid):
     return _dict_to_rule(r, opts)
 
 
-def get_lines(data, output=StringIO(), sid=SID):
+def get_lines(data, sid=SID):
     for i in data:
         if isinstance(i, Indicator):
             i = i.__dict__()
 
-            output.write(_indicator_to_rule(i, sid))
+            yield _indicator_to_rule(i, sid)
             sid += 1
-
-            yield output.getvalue()
-            if isinstance(output, StringIO):
-                output.truncate(0)
 
 
 class Snort(Plugin):

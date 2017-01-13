@@ -24,8 +24,8 @@ HEADER = '#' + '\t'.join(COLUMNS)
 SEP = '|'
 
 
-def get_lines(data, cols=COLUMNS, output=StringIO()):
-
+def get_lines(data, cols=COLUMNS):
+    output = StringIO()
     output.write("{0}\n".format(HEADER))
 
     for i in data:

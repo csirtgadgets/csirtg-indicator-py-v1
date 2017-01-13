@@ -14,7 +14,8 @@ if PYVERSION > 2:
     basestring = (str, bytes)
 
 
-def get_lines(data, output=StringIO(), cols=COLUMNS, quoting=csv.QUOTE_ALL):
+def get_lines(data, cols=COLUMNS, quoting=csv.QUOTE_ALL):
+    output = StringIO()
     csvWriter = csv.DictWriter(output, cols, quoting=quoting)
     csvWriter.writeheader()
 

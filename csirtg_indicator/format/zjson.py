@@ -10,8 +10,7 @@ except ImportError:
     from io import StringIO
 
 
-def get_lines(data, cols=COLUMNS, output=StringIO(), stream=False):
-
+def get_lines(data, cols=COLUMNS, stream=False):
     for i in data:
 
         if isinstance(i, Indicator):
@@ -28,11 +27,7 @@ def get_lines(data, cols=COLUMNS, output=StringIO(), stream=False):
         if stream:
             i = [i]
 
-        json.dump(i, output)
-        yield output.getvalue().rstrip('\r\n')
-
-        if isinstance(output, StringIO):
-            output.truncate(0)
+        yield json.dumps(i)
 
 
 class Json(Plugin):
