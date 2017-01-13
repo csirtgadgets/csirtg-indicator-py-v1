@@ -1,10 +1,6 @@
 from .plugin import Plugin
 import os
 from csirtg_indicator import Indicator
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
 
 SID = os.environ.get('CSIRTG_INDICATOR_SNORT_SID', 5000000000)
 THRESHOLD = os.environ.get('CSIRTG_INDICATOR_SNORT_THRESHOLD', 'type limit,track by_src,count 1,seconds 3600')
