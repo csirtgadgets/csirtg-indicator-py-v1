@@ -41,7 +41,9 @@ def get_lines(data, output=StringIO(), cols=COLUMNS, quoting=csv.QUOTE_ALL):
 
         csvWriter.writerow(r)
         yield output.getvalue().rstrip('\r\n')
-        output.truncate(0)
+
+        if isinstance(output, StringIO):
+            output.truncate(0)
 
 
 class Csv(Plugin):

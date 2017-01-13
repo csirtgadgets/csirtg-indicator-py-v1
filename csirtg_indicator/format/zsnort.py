@@ -1,6 +1,10 @@
 from .plugin import Plugin
 import os
 from csirtg_indicator import Indicator
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 SID = os.environ.get('CSIRTG_INDICATOR_SNORT_SID', 5000000000)
 THRESHOLD = os.environ.get('CSIRTG_INDICATOR_SNORT_THRESHOLD', 'type limit,track by_src,count 1,seconds 3600')
@@ -13,30 +17,83 @@ CLASSTYPE = os.environ.get('CSIRTG_INDICATOR_SNORT_CLASSTYPE', False)
 TAG = os.environ.get('CSIRTG_INDICATOR_SNORT_TAG', False)
 
 
+def _dict_to_rule(rule, opts=False):
+    r = ' '.join([
+        rule['action'],
+        rule['proto'],
+        rule['src'],
+        rule['sport'],
+        rule['dir'],
+        rule['dst'],
+        rule['dport'],
+    ])
+
+    if opts:
+        opstring = '; '.join('{}: {}'.format(v, opts[v]) for v in opts if opts[v])
+        r = '{} ({};)'.format(r, opstring)
+
+    return r
+
+
+def _indicator_to_rule(i, sid):
+    portlist = 'any'
+    if i.get('portlist') and i['portlist'] is not None:
+        portlist = str(i['portlist'])
+
+    r = {
+        'action': 'alert',
+        'proto': i.get('protocol', 'IP'),
+        'src': SRC,
+        'sport': 'any',
+        'dir': '->',
+        'dst': i['indicator'],
+        'dport': portlist,
+    }
+
+    opts = {
+        'msg': '{} - {} - {}'.format(MSG_PREFIX, TLP_DEFAULT, ','.join(i['tags'])),
+        'sid': sid,
+        'threshold': THRESHOLD,
+        'classtype': CLASSTYPE,
+        'reference': i.get('altid', ''),
+        'priority': PRIORITY,
+        'tag': TAG,
+
+    }
+
+    if i['itype'] == 'ipv4':
+        pass
+
+    if i['itype'] == 'ipv4':
+        pass
+
+    if i['itype'] == 'fqdn':
+        pass
+
+    if i['itype'] == 'url':
+        pass
+
+    return _dict_to_rule(r, opts)
+
+
+def get_lines(data, output=StringIO(), sid=SID):
+    for i in data:
+        if isinstance(i, Indicator):
+            i = i.__dict__()
+
+            output.write(_indicator_to_rule(i, sid))
+            sid += 1
+
+            yield output.getvalue()
+            if isinstance(output, StringIO):
+                output.truncate(0)
+
+
 class Snort(Plugin):
     __name__ = 'snort'
 
     def __init__(self, *args, **kwargs):
         super(Snort, self).__init__(*args, **kwargs)
-
-        self.cols = ['indicator', 'itype', 'tags', 'confidence', 'provider']
-
-    def _dict_to_rule(self, rule, opts=False):
-        r = ' '.join([
-            rule['action'],
-            rule['proto'],
-            rule['src'],
-            rule['sport'],
-            rule['dir'],
-            rule['dst'],
-            rule['dport'],
-        ])
-
-        if opts:
-            opstring = '; '.join('{}: {}'.format(v, opts[v]) for v in opts if opts[v])
-            r = '{} ({};)'.format(r, opstring)
-
-        return r
 
     def __repr__(self):
         text = []
@@ -45,44 +102,7 @@ class Snort(Plugin):
             if isinstance(i, Indicator):
                 i = i.__dict__()
 
-            portlist = 'any'
-            if i.get('portlist') and i['portlist'] is not None:
-                portlist = str(i['portlist'])
-
-            r = {
-                'action': 'alert',
-                'proto': i.get('protocol', 'IP'),
-                'src': SRC,
-                'sport': 'any',
-                'dir': '->',
-                'dst': i['indicator'],
-                'dport': portlist,
-            }
-
-            opts = {
-                'msg': '{} - {} - {}'.format(MSG_PREFIX, TLP_DEFAULT, ','.join(i['tags'])),
-                'sid': sid,
-                'threshold': THRESHOLD,
-                'classtype': CLASSTYPE,
-                'reference': i.get('altid', ''),
-                'priority': PRIORITY,
-                'tag': TAG,
-
-            }
-
-            if i['itype'] == 'ipv4':
-                pass
-
-            if i['itype'] == 'ipv4':
-                pass
-
-            if i['itype'] == 'fqdn':
-                pass
-
-            if i['itype'] == 'url':
-                pass
-
-            text.append(self._dict_to_rule(r, opts))
+            text.append(_indicator_to_rule(i, sid))
             sid += 1
 
         return "\n".join(text)

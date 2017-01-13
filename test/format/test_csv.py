@@ -3,7 +3,7 @@ from csirtg_indicator.format.zcsv import Csv
 from csirtg_indicator import Indicator
 import pytest
 from csirtg_indicator.format.zcsv import get_lines
-from pprint import pprint
+
 
 @pytest.fixture
 def indicator():
