@@ -10,6 +10,7 @@ python:
 
 before_install:
     - pip install -r dev_requirements.txt
+    - pip install stix
 
 script:
     - python setup.py test

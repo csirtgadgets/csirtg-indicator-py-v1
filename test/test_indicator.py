@@ -2,6 +2,7 @@ from csirtg_indicator import Indicator
 import json
 from csirtg_indicator.exceptions import InvalidIndicator
 
+
 def test_indicator_ipv4():
     i = Indicator('192.168.1.1')
     assert i.is_private()
@@ -62,7 +63,7 @@ def test_format_indicator():
     i = Indicator('example.com')
     i.altid = 'https://csirtg.io/search?q={indicator}'
 
-    i = i.format_keys()
+    i = list(i.format_keys())[0]
     assert i.altid == 'https://csirtg.io/search?q=example.com'
 
 
