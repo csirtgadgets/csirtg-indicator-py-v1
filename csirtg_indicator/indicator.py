@@ -1,52 +1,27 @@
 # -*- coding: utf-8 -*-
+import sys
+if sys.version_info > (3,):
+    from urllib.parse import urlparse
+    basestring = (str, bytes)
+else:
+    from urlparse import urlparse
+
 import json
-import logging
 import textwrap
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime
 import codecs
-
-import arrow
 import pytricia
 from .utils import parse_timestamp, resolve_itype, is_subdomain
 from . import VERSION
-import sys
 from .exceptions import InvalidIndicator
-from base64 import b64encode, b64decode
-from zlib import compress,decompress
-from .constants import PYVERSION
+from base64 import b64encode
+from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, FIELDS_TIME, LOG_FORMAT
 import logging
-
-if sys.version_info > (3,):
-    from urllib.parse import urlparse
-else:
-    from urlparse import urlparse
 
 from pprint import pprint
 
-TLP = "green"
-GROUP = "everyone"
-LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
-PROTOCOL_VERSION = '0.00a0'
-FIELDS = ['version', 'indicator', 'itype', 'tlp', 'provider', 'portlist', 'protocol', 'asn', 'asn_desc', 'cc', 'group',
-          'reference', 'reference_tlp', 'application', 'confidence', 'peers', 'city', 'longitude', 'latitude',
-          'description', 'additional_data', 'rdata', 'altid', 'altid_tlp', 'firsttime', 'lasttime', 'reporttime',
-          'message', 'count']
-
-
 IPV4_PRIVATE = pytricia.PyTricia()
-IPV4_PRIVATE_NETS = [
-    "0.0.0.0/8",
-    "10.0.0.0/8",
-    "127.0.0.0/8",
-    "192.168.0.0/16",
-    "169.254.0.0/16",
-    "172.16.0.0/12",
-    "192.0.2.0/24",
-    "224.0.0.0/4",
-    "240.0.0.0/5",
-    "248.0.0.0/5"
-]
 
 for x in IPV4_PRIVATE_NETS:
     IPV4_PRIVATE[x] = True
@@ -57,69 +32,34 @@ class Indicator(object):
     def __init__(self, indicator=None, version=PROTOCOL_VERSION, **kwargs):
         self.version = version
 
-        self.tlp = kwargs.get('tlp')
-        self.provider = kwargs.get('provider')
-        self.reporttime = kwargs.get('reporttime')
-        self.group = kwargs.get('group')
-        self.itype = kwargs.get('itype')
-        self.protocol = kwargs.get('protocol')
-        self.portlist = kwargs.get('portlist')
-        self.dest = kwargs.get('dest')
-        self.dest_portlist = kwargs.get('dest_portlist')
-        self.tags = kwargs.get('tags')
-        self.application = kwargs.get('application')
-        self.reference = kwargs.get('reference')
-        self.reference_tlp = kwargs.get('reference_tlp')
-        self.confidence = kwargs.get('confidence')
-        self.firsttime = kwargs.get('firsttime')
-        self.lasttime = kwargs.get('lasttime')
-        self.peers = kwargs.get('peers')
-        self.longitude = kwargs.get('longitude')
-        self.latitude = kwargs.get('latitude')
-        self.city = kwargs.get('city')
-        self.cc = kwargs.get('cc')
-        self.timezone = kwargs.get('timezone')
-        self.description = kwargs.get('description')
-        self.altid = kwargs.get('altid')
-        self.altid_tlp = kwargs.get('altid_tlp')
-        self.additional_data = kwargs.get('additional_data')
-        self.mask = kwargs.get('mask')
-        self.rdata = kwargs.get('rdata')
-        self.asn_desc = kwargs.get('asn_desc')
-        self.asn = kwargs.get('asn')
-        self.count = kwargs.get('count')
+        for k in FIELDS:
+            if k == 'indicator':  # handle this at the end
+                continue
 
-        self.message = kwargs.get('message')
+            if kwargs.get(k) is None:
+                v = None
+                if k is 'confidence':
+                    v = 0
 
-        if self.tags and isinstance(self.tags, str):
-            self.tags = self.tags.split(',')
+                setattr(self, k, v)
+                continue
 
-        if self.description:
-            self.description = self.description.replace('\"', '').lower()
+            if k in FIELDS_TIME:
+                kwargs[k] = parse_timestamp(kwargs[k]).datetime
+                setattr(self, k, kwargs[k])
+                continue
 
-        if self.timezone:
-            self.timezone = self.timezone.lower()
+            if isinstance(kwargs[k], basestring):
+                kwargs[k] = kwargs[k].lower()
+                if k in ['tags', 'peers']:
+                    kwargs[k] = kwargs[k].split(',')
 
-        if self.reporttime and isinstance(self.reporttime, str):
-            self.reporttime = parse_timestamp(self.reporttime).datetime
-
-        if self.firsttime:
-            self.firsttime = parse_timestamp(self.firsttime).datetime
-
-        if self.lasttime:
-            self.lasttime = parse_timestamp(self.lasttime).datetime
-
-        if self.asn and self.asn.lower() == 'na':
-            self.asn = None
-
-        self.asn = self.asn
-
-        if self.asn_desc and self.asn_desc.lower() == 'na':
-            self.asn_desc = None
+            setattr(self, k, kwargs[k])
 
         self._indicator = None
         if indicator:
             self.indicator = indicator
+
 
     @property
     def indicator(self):
@@ -185,73 +125,28 @@ class Indicator(object):
         return json.loads(s)
 
     def __repr__(self):
-        i = {
-            "version": self.version,
-            "indicator": self.indicator,
-            'dest': self.dest,
-            'dest_portlist': self.dest_portlist,
-            "itype": self.itype,
-            "tlp": self.tlp,
-            "provider": self.provider,
-            "portlist": self.portlist,
-            "protocol": self.protocol,
-            "asn": self.asn,
-            "asn_desc": self.asn_desc,
-            "cc": self.cc,
-            "group": self.group,
-            "reference": self.reference,
-            "reference_tlp": self.reference_tlp,
-            "application": self.application,
-            'confidence': self.confidence,
-            'peers': self.peers,
-            'city': self.city,
-            'longitude': self.longitude,
-            'latitude': self.latitude,
-            'description': self.description,
-            'additional_data': self.additional_data,
-            'rdata': self.rdata,
-            'altid': self.altid,
-            'altid_tlp': self.altid_tlp,
-            'count': self.count
-        }
+        i = {}
+        for k in FIELDS:
+            v = getattr(self, k)
+            if not v:
+                continue
 
-        if self.tags:
-            if isinstance(self.tags, str):
-                if ',' in self.tags:
-                    self.tags = self.tags.split(",")
-                else:
-                    self.tags = [self.tags]
-            i['tags'] = self.tags
-
-        if self.timezone:
-            i['timezone'] = self.timezone.lower()
-
-        if self.reporttime and isinstance(self.reporttime, datetime):
-            i['reporttime'] = self.reporttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        else:
-            i['reporttime'] = self.reporttime
-
-        if self.firsttime and isinstance(self.firsttime, datetime):
-            i['firsttime'] = self.firsttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        else:
-            i['firsttime'] = self.firsttime
-
-        if self.lasttime and isinstance(self.lasttime, datetime):
-            i['lasttime'] = self.lasttime.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
-        else:
-            i['lasttime'] = self.lasttime
-
-        if self.message:
-            if isinstance(self.message, str):
+            if k == 'message':
                 if PYVERSION == 2:
-                    self.messge = codecs.unicode_escape_encode(self.message.decode('utf-8'))[0]
+                    v = codecs.unicode_escape_encode(v.decode('utf-8'))[0]
                 else:
-                    self.message = self.message.encode("utf-8")
+                    v = v.encode('utf-8')
 
-            self.message = b64encode(self.message)
-            i['message'] = self.message.decode('utf-8')  # make json parser happy
+                v = b64encode(v).decode('utf-8')
 
-        i = {k: v for (k, v) in i.items() if v is not None}
+            if k in FIELDS_TIME and isinstance(v, datetime):
+                v = v.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+            if isinstance(v, basestring):
+                if k is not 'message' and not k.endswith('time'):
+                    v = v.lower()
+
+            i[k] = v
 
         sort_keys = False
         indent = None

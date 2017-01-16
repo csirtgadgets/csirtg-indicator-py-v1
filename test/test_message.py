@@ -17,5 +17,8 @@ def test_message_ok():
 
     d = json.loads(d)
 
+    pprint(d['message'])
+    pprint(b64decode(d['message'].encode('utf-8')))
+
     assert (b64decode(d['message']).decode('utf-8') == data)
 
