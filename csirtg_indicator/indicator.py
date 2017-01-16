@@ -118,7 +118,7 @@ class Indicator(object):
 
             d[k] = d[k].format(**d)
 
-        return Indicator(**d)
+        yield Indicator(**d)
 
     def __dict__(self):
         s = str(self)

@@ -5,7 +5,7 @@ import re
 
 
 def parse_timestamp(ts):
-    if isinstance(arrow):
+    if isinstance(ts, arrow.Arrow):
         return ts
 
     try:
