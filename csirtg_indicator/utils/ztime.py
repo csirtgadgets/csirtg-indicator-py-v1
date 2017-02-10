@@ -17,7 +17,7 @@ def parse_timestamp(ts):
                 ts = '{}T00:00:00Z'.format(ts)
                 t = arrow.get(ts, 'YYYYMMDDTHH:mm:ss')
 
-            if t.year < 1980:
+            if t.year < 1970:
                 raise RuntimeError('invalid timestamp: %s' % ts)
 
         return t
