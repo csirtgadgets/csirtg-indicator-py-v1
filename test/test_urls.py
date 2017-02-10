@@ -12,7 +12,8 @@ GOOD = [
     'http://www.@sokoyetu.co.ke/aol5/a000l.html',
     'https://example.com:443/1.html',
     'http://test1.test2.example.com',
-    'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60'
+    'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60',
+    'http://refreshdharan.com/bg/excel2/index.php?userid={dong.keonkwonfinancialconsultd@yahoo.com}'
 ]
 
 

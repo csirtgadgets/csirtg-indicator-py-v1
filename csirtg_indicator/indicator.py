@@ -116,7 +116,10 @@ class Indicator(object):
             if '{' not in d[k]:
                 continue
 
-            d[k] = d[k].format(**d)
+            try:
+                d[k] = d[k].format(**d)
+            except KeyError:
+                pass
 
         yield Indicator(**d)
 
