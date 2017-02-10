@@ -1,6 +1,14 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.utils import is_subdomain
 
+GOOD = [
+    'hdxturkceizle.xn--6frz82g',
+    'xn--1--blcfn0a0ai7a1a7e.xn--p1acf',
+    'example.org',
+    '1.2.3.4.com',
+    'xn----jtbbmekqknepg3a.xn--p1ai'
+]
+
 
 def _not(data):
     for d in data:
@@ -24,9 +32,8 @@ def test_fqdn_urls():
 
 
 def test_fqdn_ok():
-    data = ['example.org', '1.2.3.4.com', 'xn----jtbbmekqknepg3a.xn--p1ai']
 
-    for d in data:
+    for d in GOOD:
         d = Indicator(d)
         assert d.itype is 'fqdn'
 
