@@ -78,8 +78,9 @@ class Indicator(object):
             u = urlparse(self._indicator)
             self._indicator = u.geturl().rstrip('/').lower()
 
-        if self.mask and (self.itype == 'ipv4' or self.itype == 'ipv6'):
+        if self.mask and (self.itype in ['ipv4', 'ipv6']):
             self._indicator = '{}/{}'.format(self._indicator, int(self.mask))
+            self.mask = None
 
     @indicator.getter
     def indicator(self):
