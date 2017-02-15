@@ -119,7 +119,7 @@ class Indicator(object):
 
             try:
                 d[k] = d[k].format(**d)
-            except KeyError:
+            except (KeyError, ValueError):
                 pass
 
         yield Indicator(**d)
