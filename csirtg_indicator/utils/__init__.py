@@ -4,6 +4,7 @@ import ipaddress
 from ..exceptions import InvalidIndicator
 from ..constants import PYVERSION
 from .ztime import parse_timestamp
+import sys
 
 if PYVERSION == 3:
     from urllib.parse import urlparse
@@ -12,7 +13,7 @@ else:
 
 from pprint import pprint
 
-RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}$')
+RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(\d{1,3})$')
 RE_IPV4_CIDR = re.compile('^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/\d{1,2})$')
 
 # http://stackoverflow.com/a/17871737
@@ -57,20 +58,13 @@ def resolve_itype(indicator, test_broken=False):
         except ipaddress.AddressValueError:
             pass
 
-    def _ipv4(s, normalize=True):
-        import sys
-
-        if sys.platform == 'darwin' and normalize:
-            s = ipv4_normalize(s)
+    def _ipv4(s):
 
         try:
             socket.inet_pton(socket.AF_INET, s)
             return True
         except socket.error:
             pass
-
-        if normalize:
-            s = ipv4_normalize(s)
 
         if re.match(RE_IPV4, s):
             return True
