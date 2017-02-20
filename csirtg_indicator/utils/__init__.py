@@ -35,44 +35,34 @@ RE_HASH = {
 
 
 def ipv4_normalize(i):
-    RE_ = '^0{1,2}(\d{1,2})'
-    bits = i.split('.')
-
-    for idx, b in enumerate(bits):
-        m = re.search(RE_, b)
-        if m:
-            bits[idx] = m.group(1)
-
-    return '.'.join(bits)
+    _ = re.compile(r"(^|\.)0+([^/])")
+    return _.sub(r'\1\2', i)
 
 
 def resolve_itype(indicator, test_broken=False):
     def _ipv6(s):
         try:
             socket.inet_pton(socket.AF_INET6, s)
+            return True
         except socket.error:
             pass
-        else:
-            return True
 
         if PYVERSION == 2:
             s = unicode(s)
 
         try:
             ipaddress.IPv6Network(s)
+            return True
         except ipaddress.AddressValueError:
             pass
-        else:
-            return True
 
     def _ipv4(s):
 
         try:
             socket.inet_pton(socket.AF_INET, s)
+            return True
         except socket.error:
             pass
-        else:
-            return True
 
         if re.match(RE_IPV4, s):
             return True
@@ -86,10 +76,9 @@ def resolve_itype(indicator, test_broken=False):
 
         try:
             ipaddress.ip_network(s)
+            return True
         except ValueError as e:
             return False
-
-        return True
 
     def _fqdn(s):
         if RE_FQDN.match(s):
@@ -219,10 +208,9 @@ def is_ipv4_net(i):
 
     try:
         ipaddress.ip_network(i)
+        return True
     except ValueError:
         return False
-    else:
-        return True
 
 
 def _normalize_url(i):
