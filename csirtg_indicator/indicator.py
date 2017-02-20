@@ -33,13 +33,11 @@ class Indicator(object):
         self.version = version
 
         for k in FIELDS:
-            if k == 'indicator':  # handle this at the end
+            if k in ['indicator', 'confidence', 'count']:  # handle this at the end
                 continue
 
             if kwargs.get(k) is None:
                 v = None
-                if k is 'confidence':
-                    v = 0
 
                 setattr(self, k, v)
                 continue
@@ -59,6 +57,12 @@ class Indicator(object):
         self._indicator = None
         if indicator:
             self.indicator = indicator
+
+        self._confidence = None
+        self.confidence = kwargs.get('confidence', 0)
+
+        self._count = None
+        self.count = kwargs.get('count', 1)
 
     @property
     def indicator(self):
@@ -87,6 +91,30 @@ class Indicator(object):
     @indicator.getter
     def indicator(self):
         return self._indicator
+
+    @property
+    def confidence(self):
+        return self._confidence
+
+    @confidence.setter
+    def confidence(self, v):
+        self._confidence = float(v)
+
+    @confidence.getter
+    def confidence(self):
+        return self._confidence
+
+    @property
+    def count(self):
+        return self._count
+
+    @count.setter
+    def count(self, v):
+        self._count = int(v)
+
+    @count.getter
+    def count(self):
+        return self._count
 
     def magic(self, data):
         for e in data:
@@ -155,6 +183,9 @@ class Indicator(object):
             if isinstance(v, basestring):
                 if k is not 'message' and not k.endswith('time'):
                     v = v.lower()
+
+            if k == 'confidence':
+                v = float(v)
 
             i[k] = v
 
