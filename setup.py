@@ -33,7 +33,7 @@ setup(
     description="CSIRTG Indicator Framework",
     long_description="",
     url="https://github.com/csirtgadgets/csirtg-indicator-py",
-    license='LGPL3',
+    license='MPL2',
     classifiers=[
                "Topic :: System :: Networking",
                "Environment :: Other Environment",
