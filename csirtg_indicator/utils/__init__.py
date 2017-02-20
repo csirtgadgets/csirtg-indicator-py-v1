@@ -33,9 +33,11 @@ RE_HASH = {
     'sha512': re.compile('^[a-fA-F0-9]{128}$'),
 }
 
+RE_IPV4_PADDING = re.compile(r"(^|\.)0+([^/])")
+
 
 def ipv4_normalize(i):
-    return re.compile(r"(^|\.)0+([^/])").sub(r'\1\2', i)
+    return RE_IPV4_PADDING.sub(r'\1\2', i)
 
 
 def resolve_itype(indicator, test_broken=False):
@@ -55,13 +57,20 @@ def resolve_itype(indicator, test_broken=False):
         except ipaddress.AddressValueError:
             pass
 
-    def _ipv4(s):
+    def _ipv4(s, normalize=True):
+        import sys
+
+        if sys.platform == 'darwin' and normalize:
+            s = ipv4_normalize(s)
 
         try:
             socket.inet_pton(socket.AF_INET, s)
             return True
         except socket.error:
             pass
+
+        if normalize:
+            s = ipv4_normalize(s)
 
         if re.match(RE_IPV4, s):
             return True
