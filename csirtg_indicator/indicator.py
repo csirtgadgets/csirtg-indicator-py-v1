@@ -12,7 +12,7 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import datetime
 import codecs
 import pytricia
-from .utils import parse_timestamp, resolve_itype, is_subdomain
+from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize
 from . import VERSION
 from .exceptions import InvalidIndicator
 from base64 import b64encode
@@ -60,7 +60,6 @@ class Indicator(object):
         if indicator:
             self.indicator = indicator
 
-
     @property
     def indicator(self):
         return self.__indicator
@@ -77,6 +76,9 @@ class Indicator(object):
         if self.itype == 'url':
             u = urlparse(self._indicator)
             self._indicator = u.geturl().rstrip('/').lower()
+
+        if self.itype == 'ipv4':
+            self._indicator = ipv4_normalize(self._indicator)
 
         if self.mask and (self.itype in ['ipv4', 'ipv6']):
             self._indicator = '{}/{}'.format(self._indicator, int(self.mask))
@@ -96,10 +98,14 @@ class Indicator(object):
                 pass
 
     def is_private(self):
-        if self.itype and self.itype == 'ipv4':
-            if IPV4_PRIVATE.get(str(self.indicator)):
-                return True
-        return False
+        if not self.itype:
+            return False
+
+        if self.itype != 'ipv4':
+            return False
+
+        if IPV4_PRIVATE.get(str(self.indicator)):
+            return True
 
     def is_subdomain(self):
         return is_subdomain(self.indicator)

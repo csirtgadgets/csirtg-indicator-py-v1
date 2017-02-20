@@ -10,6 +10,8 @@ if PYVERSION == 3:
 else:
     from urlparse import urlparse
 
+from pprint import pprint
+
 RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}$')
 RE_IPV4_CIDR = re.compile('^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\/\d{1,2})$')
 
@@ -32,53 +34,66 @@ RE_HASH = {
 }
 
 
+def ipv4_normalize(i):
+    RE_ = '^0{1,2}(\d{1,2})'
+    bits = i.split('.')
+
+    for idx, b in enumerate(bits):
+        m = re.search(RE_, b)
+        if m:
+            bits[idx] = m.group(1)
+
+    return '.'.join(bits)
+
+
 def resolve_itype(indicator, test_broken=False):
     def _ipv6(s):
         try:
             socket.inet_pton(socket.AF_INET6, s)
-        except socket.error as e:
-            try:
-                if PYVERSION == 2:
-                    s = unicode(s)
-                if ipaddress.IPv6Network(s):
-                    return True
-            except Exception as e:
-                return False
-            return False
-        except Exception as e:
-            return False
+        except socket.error:
+            pass
+        else:
+            return True
 
-        return True
+        if PYVERSION == 2:
+            s = unicode(s)
+
+        try:
+            ipaddress.IPv6Network(s)
+        except ipaddress.AddressValueError:
+            pass
+        else:
+            return True
 
     def _ipv4(s):
 
         try:
             socket.inet_pton(socket.AF_INET, s)
         except socket.error:
-            if not re.match(RE_IPV4, s):
-                return False
+            pass
+        else:
+            return True
 
-        except Exception as e:
+        if re.match(RE_IPV4, s):
+            return True
+
+    def _ipv4_cidr(s):
+        if not re.match(RE_IPV4_CIDR, s):
+            return False
+
+        if PYVERSION == 2:
+            s = unicode(s)
+
+        try:
+            ipaddress.ip_network(s)
+        except ValueError as e:
             return False
 
         return True
 
-    def _ipv4_cidr(s):
-        if re.match(RE_IPV4_CIDR, s):
-            if PYVERSION == 2:
-                s = unicode(s)
-            try:
-                ipaddress.ip_network(s)
-            except ValueError as e:
-                return False
-
-            return True
-
-        return False
-
     def _fqdn(s):
         if RE_FQDN.match(s):
-            return 1
+            return True
 
     def _url(s):
         u = urlparse(s)
@@ -190,17 +205,24 @@ def is_subdomain(i):
 
 
 def is_ipv4_net(i):
-    itype = resolve_itype(i)
-    if itype is not '':
-        return
-    if resolve_itype(i) == 'ipv4':
-        if re.match(RE_IPV4_CIDR, i):
-            try:
-                ipaddress.ip_network(unicode(i))
-            except ValueError as e:
-                return False
-            return True
+    try:
+        if resolve_itype(i) != 'ipv4':
+            return False
+    except InvalidIndicator:
         return False
+
+    if not re.match(RE_IPV4_CIDR, i):
+        return False
+
+    if PYVERSION == 2:
+        i = unicode(i)
+
+    try:
+        ipaddress.ip_network(i)
+    except ValueError:
+        return False
+    else:
+        return True
 
 
 def _normalize_url(i):
