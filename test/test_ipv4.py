@@ -1,6 +1,6 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
-
+from random import randint
 
 def _not(data):
     for d in data:
@@ -57,3 +57,17 @@ def test_ipv4_private():
         assert not Indicator(indicator=d).is_private()
 
     assert Indicator('172.16.30.32').is_private()
+
+
+def test_ipv4_padded():
+    d = {
+        '192.168.001.001': '192.168.1.1',
+        '192.168.010.1': '192.168.10.1',
+        '192.168.100.010': '192.168.100.10',
+        '192.168.1.1': '192.168.1.1',
+        '012.012.012.012': '12.12.12.12'
+    }
+
+    for k, v in d.items():
+        assert Indicator(k).indicator == v
+
