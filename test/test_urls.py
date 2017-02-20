@@ -4,16 +4,17 @@ from csirtg_indicator.exceptions import InvalidIndicator
 from csirtg_indicator.utils import url_to_fqdn
 
 GOOD = [
-    # 'http://58.147.128.10:81/val/1.html',
-    # 'http://192.168.1.1/1.html',
-    # 'http://www41.xzmnt.com',
-    # 'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
-    # 'http://webmail.epuc.com.br:32000/mail/settings.html',
+    'http://58.147.128.10:81/val/1.html',
+    'http://192.168.1.1/1.html',
+    'http://www41.xzmnt.com',
+    'http://get.ahoybest.com/n/3.6.16/12205897/microsoft lync server 2010.exe',
+    'http://webmail.epuc.com.br:32000/mail/settings.html',
     'http://www.@sokoyetu.co.ke/aol5/a000l.html',
     'https://example.com:443/1.html',
     'http://test1.test2.example.com',
     'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60',
-    'http://refreshdharan.com/bg/excel2/index.php?userid={dong.keonkwonfinancialconsultd@yahoo.com}'
+    'http://refreshdharan.com/bg/excel2/index.php?userid={dong.keonkwonfinancialconsultd@yahoo.com}',
+    'http://https.www.paypal.blahblahblahblah.web.cgi.bin.blahblah.blahblahblahblah.blahblahblah-blah-blah-blah.com/signin/'
 ]
 
 
