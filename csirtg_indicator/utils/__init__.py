@@ -35,8 +35,7 @@ RE_HASH = {
 
 
 def ipv4_normalize(i):
-    _ = re.compile(r"(^|\.)0+([^/])")
-    return _.sub(r'\1\2', i)
+    return re.compile(r"(^|\.)0+([^/])").sub(r'\1\2', i)
 
 
 def resolve_itype(indicator, test_broken=False):
