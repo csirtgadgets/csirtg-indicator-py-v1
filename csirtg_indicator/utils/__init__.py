@@ -36,7 +36,7 @@ RE_HASH = {
     'sha512': re.compile('^[a-fA-F0-9]{128}$'),
 }
 
-RE_IPV4_PADDING = re.compile(r"(^|\.)0+([^/])")
+RE_IPV4_PADDING = re.compile(r"(^|\.)0+([^/.])")
 
 
 def ipv4_normalize(i):
