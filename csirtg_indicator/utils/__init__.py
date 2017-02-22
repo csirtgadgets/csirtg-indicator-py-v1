@@ -50,9 +50,14 @@ def resolve_itype(indicator, test_broken=False):
             return True
         except socket.error:
             pass
+        except UnicodeEncodeError:
+            return False
 
         if PYVERSION == 2:
-            s = unicode(s)
+            try:
+                s = unicode(s)
+            except UnicodeDecodeError:
+                return False
 
         try:
             ipaddress.IPv6Network(s)
@@ -67,6 +72,8 @@ def resolve_itype(indicator, test_broken=False):
             return True
         except socket.error:
             pass
+        except UnicodeEncodeError:
+            return False
 
         if re.match(RE_IPV4, s):
             return True
@@ -76,7 +83,10 @@ def resolve_itype(indicator, test_broken=False):
             return False
 
         if PYVERSION == 2:
-            s = unicode(s)
+            try:
+                s = unicode(s)
+            except UnicodeDecodeError:
+                return False
 
         try:
             ipaddress.ip_network(s)
