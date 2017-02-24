@@ -6,7 +6,9 @@ GOOD = [
     'xn--1--blcfn0a0ai7a1a7e.xn--p1acf',
     'example.org',
     '1.2.3.4.com',
-    'xn----jtbbmekqknepg3a.xn--p1ai'
+    'xn----jtbbmekqknepg3a.xn--p1ai',
+    'dualstack.cddf-prod-frontend-1ho73vqwbi0tw-1326553765.us-east-1.elb.amazonaws.com',
+    'laser-retargeting-server-production.us-east-1-prod-core-edge-public.spongecell.net',
 ]
 
 
