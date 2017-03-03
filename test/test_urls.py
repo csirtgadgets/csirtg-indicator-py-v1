@@ -14,7 +14,8 @@ GOOD = [
     'http://test1.test2.example.com',
     'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60',
     'http://refreshdharan.com/bg/excel2/index.php?userid={dong.keonkwonfinancialconsultd@yahoo.com}',
-    'http://https.www.paypal.blahblahblahblah.web.cgi.bin.blahblah.blahblahblahblah.blahblahblah-blah-blah-blah.com/signin/'
+    'http://https.www.paypal.blahblahblahblah.web.cgi.bin.blahblah.blahblahblahblah.blahblahblah-blah-blah-blah.com/signin/',
+    'http://ppleid.apple.com.account.manage.wets.myapleid.woa.wa.directt.myappleid.woa.25napplic2faccount.25napplic2faccountmyappleid.woa9limgdpx25napplic2faccountmya4343.25woa9limgdpx25napplic2faccountmya4343.25nap.bhsfser.com/c13cc8f750e0e241e2d23f5e2ded1706/index/src/index/index.php'
 ]
 
 
