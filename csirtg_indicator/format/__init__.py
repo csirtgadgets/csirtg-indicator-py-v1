@@ -4,6 +4,7 @@ from .zjson import Json
 from .zbro import Bro
 from .zsnort import Snort
 from .zbind import Bind
+from .zbindrpz import BindRPZ
 
 FORMATS = {
     'table': Table,
@@ -12,6 +13,7 @@ FORMATS = {
     'bro': Bro,
     'snort': Snort,
     'bind': Bind,
+    'bindrpz': BindRPZ,
 }
 
 STIX_ENABLED = True
