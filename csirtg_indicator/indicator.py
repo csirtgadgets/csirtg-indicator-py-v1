@@ -43,7 +43,6 @@ class Indicator(object):
                 continue
 
             if k in FIELDS_TIME:
-                kwargs[k] = parse_timestamp(kwargs[k]).datetime
                 setattr(self, k, kwargs[k])
                 continue
 
@@ -95,6 +94,48 @@ class Indicator(object):
     @property
     def confidence(self):
         return self._confidence
+
+    def _time_setter(self, v):
+        if isinstance(v, datetime):
+            return v
+        else:
+            return parse_timestamp(v).to('utc').datetime
+
+    @property
+    def reporttime(self):
+        return self._reporttime
+
+    @reporttime.getter
+    def reporttime(self):
+        return self._reporttime
+
+    @reporttime.setter
+    def reporttime(self, v):
+        self._reporttime = self._time_setter(v)
+
+    @property
+    def lasttime(self):
+        return self._lasttime
+
+    @lasttime.getter
+    def lasttime(self):
+        return self._lasttime
+
+    @lasttime.setter
+    def lasttime(self, v):
+        self._lasttime = self._time_setter(v)
+
+    @property
+    def firsttime(self):
+        return self._firsttime
+
+    @firsttime.getter
+    def firsttime(self):
+        return self._firsttime
+
+    @firsttime.setter
+    def firsttime(self, v):
+        self._firsttime = self._time_setter(v)
 
     @confidence.setter
     def confidence(self, v):

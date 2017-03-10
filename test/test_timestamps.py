@@ -20,3 +20,14 @@ def test_indicator_timestamps():
     assert i['firsttime'] == f
     assert i['lasttime'] == l
     assert i['reporttime'] == r
+
+
+def test_indicator_timezones():
+    t = '2017-03-06T11:41:48-06:00'
+    a = arrow.get('2017-03-06T17:41:48Z').datetime
+
+    i = Indicator('example.com', firsttime=t, lasttime=t, reporttime=t)
+
+    assert i.firsttime == a
+    assert i.lasttime == a
+    assert i.reporttime == a
