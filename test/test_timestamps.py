@@ -31,3 +31,29 @@ def test_indicator_timezones():
     assert i.firsttime == a
     assert i.lasttime == a
     assert i.reporttime == a
+
+
+def test_lasttime_only():
+    l = arrow.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    i = Indicator('192.168.1.1', lasttime=l)
+
+    assert i.lasttime == arrow.get(l).datetime
+
+    s = str(i)
+    i = json.loads(s)
+
+    assert i.get('firsttime') is None
+
+
+def test_firsttime_only():
+    l = arrow.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    i = Indicator('192.168.1.1', firsttime=l)
+
+    assert i.firsttime == arrow.get(l).datetime
+
+    s = str(i)
+    i = json.loads(s)
+
+    assert i.get('lasttime') is None
