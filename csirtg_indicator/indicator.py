@@ -42,8 +42,8 @@ class Indicator(object):
                 setattr(self, k, v)
                 continue
 
+            # set this at the end
             if k in FIELDS_TIME:
-                setattr(self, k, kwargs[k])
                 continue
 
             if isinstance(kwargs[k], basestring):
@@ -62,6 +62,9 @@ class Indicator(object):
 
         self._count = None
         self.count = kwargs.get('count', 1)
+
+        for k in FIELDS_TIME:
+            setattr(self, k, kwargs.get(k, None))
 
     @property
     def indicator(self):
@@ -96,6 +99,9 @@ class Indicator(object):
         return self._confidence
 
     def _time_setter(self, v):
+        if not v:
+            return
+
         if isinstance(v, datetime):
             return v
         else:
@@ -194,7 +200,7 @@ class Indicator(object):
 
             try:
                 d[k] = d[k].format(**d)
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, IndexError):
                 pass
 
         yield Indicator(**d)
