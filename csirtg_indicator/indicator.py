@@ -72,6 +72,10 @@ class Indicator(object):
 
     @indicator.setter
     def indicator(self, i):
+        if not i:
+            self._indicator = None
+            return
+
         if PYVERSION == 2:
             i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
 
