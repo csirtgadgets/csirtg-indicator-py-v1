@@ -4,7 +4,6 @@ import pytest
 from csirtg_indicator import Indicator
 from faker import Faker
 fake = Faker()
-import factory
 
 @pytest.fixture
 def indicator():
