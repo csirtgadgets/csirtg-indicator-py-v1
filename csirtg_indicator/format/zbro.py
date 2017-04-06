@@ -11,6 +11,7 @@ from pprint import pprint
 
 itype = {
     'ipv4': 'ADDR',
+    'ipv6': 'ADDR',
     'url': 'URL',
     'fqdn': 'DOMAIN',
     'md5': 'FILE_HASH',
