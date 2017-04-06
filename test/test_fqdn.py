@@ -1,5 +1,8 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.utils import is_subdomain
+from faker import Faker
+fake = Faker()
+
 
 GOOD = [
     'hdxturkceizle.xn--6frz82g',
@@ -61,3 +64,9 @@ def test_fqdn_subdomain():
 
     for d in data:
         assert not Indicator(indicator=d).is_subdomain()
+
+
+def test_fqdn_random():
+    for d in range(0, 100):
+        assert Indicator(indicator=fake.domain_name()).itype == 'fqdn'
+

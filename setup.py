@@ -51,6 +51,7 @@ setup(
         'ipaddress>=1.0.16',
         'pendulum>=0.5.2',
         'prettytable>=0.7.2',
+        'Faker'
     ],
     entry_points={
        'console_scripts': [
