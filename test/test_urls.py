@@ -2,6 +2,9 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
 from csirtg_indicator.utils import url_to_fqdn
+from faker import Faker
+fake = Faker()
+
 
 GOOD = [
     'http://58.147.128.10:81/val/1.html',
@@ -59,3 +62,8 @@ def test_urls_ok():
 def test_urls_fqdns():
     for g in GOOD:
         assert url_to_fqdn(g)
+
+
+def test_urls_random():
+    for d in range(0, 100):
+        assert Indicator(indicator=fake.uri()).itype == 'url'

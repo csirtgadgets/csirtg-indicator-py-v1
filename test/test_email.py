@@ -1,7 +1,8 @@
 #info@sunandsky.co.uk
-
-
+from faker import Faker
 from csirtg_indicator import Indicator
+
+fake = Faker()
 
 
 def _not(data):
@@ -37,3 +38,7 @@ def test_email_ok():
     i = Indicator('WES@barely3am.com')
     assert i.indicator == 'wes@barely3am.com'
 
+
+def test_email_random():
+    for d in range(0, 100):
+        assert Indicator(indicator=fake.email()).itype == 'email'

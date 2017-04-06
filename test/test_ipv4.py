@@ -1,6 +1,9 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
 from random import randint
+from faker import Faker
+fake = Faker()
+
 
 def _not(data):
     for d in data:
@@ -77,3 +80,7 @@ def test_ipv4_padded():
     for k, v in d.items():
         assert Indicator(k).indicator == v
 
+
+def test_ipv4_random():
+    for d in range(0, 100):
+        assert Indicator(indicator=fake.ipv4()).itype == 'ipv4'

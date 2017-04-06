@@ -1,5 +1,8 @@
 from csirtg_indicator import Indicator
 from csirtg_indicator.exceptions import InvalidIndicator
+from faker import Faker
+fake = Faker()
+
 
 def _not(data):
     for d in data:
@@ -38,3 +41,6 @@ def test_ipv6_nok():
     _not(data)
 
 
+def test_ipv6_random():
+    for d in range(0, 100):
+        assert Indicator(indicator=fake.ipv6()).itype == 'ipv6'
