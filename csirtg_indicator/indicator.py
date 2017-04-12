@@ -219,7 +219,6 @@ class Indicator(object):
 
     def __repr__(self):
         i = {}
-        pprint(FIELDS)
         for k in FIELDS:
 
             v = getattr(self, k)
