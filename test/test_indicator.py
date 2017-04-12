@@ -93,3 +93,12 @@ def test_count_str():
         raise RuntimeError('should not set confidence to ,')
     except ValueError:
         pass
+
+
+def test_uuid():
+    u1 = Indicator(indicator='192.168.1.1').uuid
+    u2 = Indicator(indicator='192.168.1.1').uuid
+
+    assert u1 is not None
+    assert u2 is not None
+    assert u1 != u2
