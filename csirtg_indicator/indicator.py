@@ -18,6 +18,7 @@ from .exceptions import InvalidIndicator
 from base64 import b64encode
 from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, FIELDS_TIME, LOG_FORMAT
 import logging
+import uuid
 
 from pprint import pprint
 
@@ -65,6 +66,9 @@ class Indicator(object):
 
         for k in FIELDS_TIME:
             setattr(self, k, kwargs.get(k, None))
+
+        if not self.uuid:
+            self.uuid = str(uuid.uuid4())
 
     @property
     def indicator(self):
@@ -215,7 +219,9 @@ class Indicator(object):
 
     def __repr__(self):
         i = {}
+        pprint(FIELDS)
         for k in FIELDS:
+
             v = getattr(self, k)
             if not v:
                 continue

@@ -5,7 +5,7 @@ if sys.version_info > (3,):
     PYVERSION = 3
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
-PROTOCOL_VERSION = '0.00a0'
+PROTOCOL_VERSION = '0.00a14'
 
 FORMAT_COLUMNS = ['tlp', 'group', 'lasttime', 'indicator', 'count', 'confidence', 'tags', 'description', 'rdata',
                   'provider']
@@ -30,7 +30,7 @@ IPV4_PRIVATE_NETS = [
 
 FIELDS_CORE = [
     'indicator', 'itype', 'tlp', 'provider', 'group', 'tlp', 'provider', 'count', 'message', 'tags', 'confidence',
-    'description', 'version'
+    'description', 'version', 'uuid'
 ]
 
 FIELDS_TIME = [
