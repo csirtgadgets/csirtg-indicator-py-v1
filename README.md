@@ -1,7 +1,7 @@
 # Getting Started
 A quick and easy way to generate threat indicator objects!
 
-```
+```bash
 $ [sudo] pip install csirtg-indicator
 $ csirtg-indicator --group everyone --indicator http://example.com/1.htm --tlp green --tags phishing
 {
@@ -14,6 +14,7 @@ $ csirtg-indicator --group everyone --indicator http://example.com/1.htm --tlp g
     "tlp": "green",
     "uuid": "24423bab-c81f-4819-b9be-c3d9d975a835"
 }
+```
 
 # Getting Involved
 There are many ways to get involved with the project. If you have a new and exciting feature, or even a simple bugfix, simply [fork the repo](https://help.github.com/articles/fork-a-repo), create some simple test cases, [generate a pull-request](https://help.github.com/articles/using-pull-requests) and give yourself credit!
