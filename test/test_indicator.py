@@ -63,7 +63,7 @@ def test_format_indicator():
     i = Indicator('example.com')
     i.altid = 'https://csirtg.io/search?q={indicator}'
 
-    i = list(i.format_keys())[0]
+    i = i.format_keys()
     assert i.altid == 'https://csirtg.io/search?q=example.com'
 
 

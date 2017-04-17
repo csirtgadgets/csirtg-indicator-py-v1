@@ -211,7 +211,7 @@ class Indicator(object):
             except (KeyError, ValueError, IndexError):
                 pass
 
-        yield Indicator(**d)
+        return Indicator(**d)
 
     def __dict__(self):
         s = str(self)

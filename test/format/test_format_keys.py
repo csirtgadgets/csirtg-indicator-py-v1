@@ -19,7 +19,7 @@ def indicator():
 
 def test_format_keys(indicator):
 
-    i = next(indicator.format_keys())
+    i =indicator.format_keys()
     assert i.indicator == indicator.indicator
 
 if __name__ == '__main__':
