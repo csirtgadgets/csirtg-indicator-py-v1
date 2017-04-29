@@ -81,7 +81,10 @@ class Indicator(object):
             return
 
         if PYVERSION == 2:
-            i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
+            try:
+                i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
+            except Exception:
+                i = codecs.unicode_escape_encode(i.encode('utf-8', 'ignore').decode('utf-8'))[0]
 
         i = i.lower()
         self.itype = resolve_itype(i)
