@@ -102,3 +102,11 @@ def test_uuid():
     assert u1 is not None
     assert u2 is not None
     assert u1 != u2
+
+
+def test_eq():
+    u1 = Indicator(indicator='192.168.1.1')
+    u2 = Indicator(indicator='192.168.1.1')
+
+    u2.uuid = u1.uuid
+    assert u1 == u2

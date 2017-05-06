@@ -259,6 +259,11 @@ class Indicator(object):
             i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
             return json.dumps(i, indent=indent, sort_keys=sort_keys, separators=(',', ': '))
 
+    def __eq__(self, other):
+        d1 = self.__dict__()
+        d2 = other.__dict__()
+        return d1 == d2
+
 
 def main():
     p = ArgumentParser(
