@@ -1,17 +1,36 @@
 import arrow
-import datetime
+from datetime import datetime
 import pendulum
 import re
+
+
+def human_to_dt(ts):
+    t = arrow.utcnow()
+    if ts == 'now':
+        return t
+
+    if ts == 'hour':
+        return t.replace(minute=0, second=0, microsecond=0)
+
+    if ts == 'day':
+        return t.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if ts == 'month':
+        return t.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
 
 def parse_timestamp(ts):
     if isinstance(ts, arrow.Arrow):
         return ts
 
+    t = human_to_dt(ts)
+    if t:
+        return t
+
     try:
         t = arrow.get(ts)
         if t.year < 1980:
-            if type(ts) == datetime.datetime:
+            if type(ts) == datetime:
                 ts = str(ts)
             if len(ts) == 8:
                 ts = '{}T00:00:00Z'.format(ts)
