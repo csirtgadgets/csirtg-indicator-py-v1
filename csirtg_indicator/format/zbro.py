@@ -1,6 +1,7 @@
 from .plugin import Plugin
 import re
 from csirtg_indicator import Indicator
+from csirtg_indicator.constants import PYVERSION
 try:
     from StringIO import StringIO
 except ImportError:
@@ -25,35 +26,51 @@ HEADER = '#' + '\t'.join(COLUMNS)
 SEP = '|'
 
 
+def _i_to_bro(i, cols):
+    if isinstance(i, Indicator):
+        i = i.__dict__()
+
+    r = []
+    
+    if i['itype'] is 'url':
+        i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
+
+    for c in cols:
+        y = i.get(c, '-')
+
+        if type(y) is list:
+            y = SEP.join(y)
+
+        if isinstance(y, int):
+            y = str(y)
+
+        if PYVERSION == 2:
+            if isinstance(y, unicode):
+                y = y.encode('utf-8')
+        else:
+            if isinstance(y, bytes):
+                y = y.encode('utf-8')
+
+        if c is 'itype':
+            y = 'Intel::{0}'.format(itype[i[c]])
+
+        r.append(str(y))
+
+    # do_notice
+    # https://www.bro.org/bro-exchange-2013/exercises/intel.html
+    # https://github.com/csirtgadgets/massive-octo-spice/issues/438
+    r.append('T')
+    return "\t".join(r)
+
+
 def get_lines(data, cols=COLUMNS):
     output = StringIO()
     output.write("{0}\n".format(HEADER))
 
     for i in data:
-        if isinstance(i, Indicator):
-            i = i.__dict__()
+        i = _i_to_bro(i, cols)
 
-        r = []
-        if i['itype'] is 'url':
-            i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
-
-        for c in cols:
-            y = i.get(c, '-')
-
-            if type(y) is list:
-                y = SEP.join(y)
-
-            y = str(y)
-            if c is 'itype':
-                y = 'Intel::{0}'.format(itype[i[c]])
-            r.append(y)
-
-        # do_notice
-        # https://www.bro.org/bro-exchange-2013/exercises/intel.html
-        # https://github.com/csirtgadgets/massive-octo-spice/issues/438
-        r.append('T')
-
-        output.write("\t".join(r))
+        output.write(i)
         output.write("\n")
         yield output.getvalue()
 
@@ -67,35 +84,13 @@ class Bro(Plugin):
     def __init__(self, *args, **kwargs):
         super(Bro, self).__init__(*args, **kwargs)
 
-        self.cols = ['indicator', 'itype', 'tags', 'confidence', 'provider']
+        self.cols = COLUMNS
 
     def __repr__(self):
         text = []
         for i in self.data:
-            if isinstance(i, Indicator):
-                i = i.__dict__()
-
-            r = []
-            if i['itype'] is 'url':
-                i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
-
-            for c in self.cols:
-                y = i.get(c, '-')
-
-                if type(y) is list:
-                    y = SEP.join(y)
-
-                y = str(y)
-                if c is 'itype':
-                    y = 'Intel::{0}'.format(itype[i[c]])
-                r.append(y)
-
-            # do_notice
-            # https://www.bro.org/bro-exchange-2013/exercises/intel.html
-            # https://github.com/csirtgadgets/massive-octo-spice/issues/438
-            r.append('T')
-
-            text.append("\t".join(r))
+            i = _i_to_bro(i, self.cols)
+            text.append(i)
 
         text = "\n".join(text)
 
