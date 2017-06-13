@@ -30,6 +30,9 @@ def get_lines(data, cols=COLUMNS, quoting=csv.QUOTE_ALL):
             if type(y) is list:
                 y = u','.join(y)
 
+            if c == 'confidence' and y is None:
+                y = 0.0
+
             if PYVERSION < 3:
                 r[c] = y
                 if isinstance(r[c], basestring):
@@ -65,6 +68,9 @@ class Csv(Plugin):
 
                 if type(y) is list:
                     y = u','.join(y)
+
+                if c == 'confidence' and y is None:
+                    y = 0.0
 
                 if PYVERSION < 3:
                     r[c] = y

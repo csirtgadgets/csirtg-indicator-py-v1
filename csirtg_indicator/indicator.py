@@ -58,7 +58,7 @@ class Indicator(object):
         if indicator:
             self.indicator = indicator
 
-        self._confidence = None
+        self._confidence = 0
         self.confidence = kwargs.get('confidence', 0)
 
         self._count = None
