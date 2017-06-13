@@ -20,6 +20,9 @@ def _indicator_row(i, cols, max_field_size):
         if type(y) is list:
             y = ','.join(y)
 
+        if c == 'confidence' and y is None:
+            y = 0.0
+
         if y and (c in ['firsttime', 'lasttime', 'reporttime']):
             y = arrow.get(y).format('YYYY-MM-DDTHH:mm:ss.SSSSS')
             y = '{}Z'.format(y)
