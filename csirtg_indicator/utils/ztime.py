@@ -51,6 +51,16 @@ def parse_timestamp(ts):
                 return t
             else:
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
+        if len(ts) == 16:
+            # 20160219T224322Z
+            match = re.search('^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$', ts)
+            if match:
+                ts = '{}-{}-{}T{}:{}:{}Z'.format(match.group(1), match.group(2), match.group(3), match.group(4),
+                                                 match.group(5), match.group(6))
+                t = arrow.get(ts, 'YYYY-MM-DDTHH:mm:ss')
+                return t
+            else:
+                raise RuntimeError('Invalid Timestamp: %s' % ts)
         else:
             raise RuntimeError('Invalid Timestamp: %s' % ts)
 
