@@ -18,10 +18,10 @@ def _dict_to_rule(rule, opts=False):
         rule['action'],
         rule['proto'],
         rule['src'],
-        rule['sport'],
+        rule.get('sport', 'any'),
         rule['dir'],
         rule['dst'],
-        rule['dport'],
+        rule.get('dport', 'any'),
     ])
 
     if opts:
