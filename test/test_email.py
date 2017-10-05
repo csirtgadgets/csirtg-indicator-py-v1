@@ -29,6 +29,7 @@ def test_email_ok():
         'wes@example.org',
         'info@sunandsky.co.uk',
         'wes.info@sunandsky.co.uk',
+        'mutti?25@minsal.cl'
     ]
 
     for d in data:
