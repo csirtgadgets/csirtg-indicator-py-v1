@@ -66,8 +66,11 @@ class Csv(Plugin):
             for c in self.cols:
                 y = i.get(c, u'')
 
-                if type(y) is list:
-                    y = u','.join(y)
+                if isinstance(y, list):
+                    if len(y) > 0 and isinstance(y[0], dict):
+                        y = ''
+                    else:
+                        y = u','.join(y)
 
                 if c == 'confidence' and y is None:
                     y = 0.0

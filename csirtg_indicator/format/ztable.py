@@ -17,8 +17,11 @@ def _indicator_row(i, cols, max_field_size):
     for c in cols:
         y = i.get(c, '')
 
-        if type(y) is list:
-            y = ','.join(y)
+        if isinstance(y, list):
+            if len(y) > 0 and isinstance(y[0], dict):
+                y = ''
+            else:
+                y = ','.join(y)
 
         if c == 'confidence' and y is None:
             y = 0.0

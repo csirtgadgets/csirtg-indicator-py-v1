@@ -20,7 +20,7 @@ itype = {
     'sha256': 'FILE_HASH',
 }
 
-COLUMNS = ['fields', 'indicator', 'indicator_type', 'meta.desc', 'meta.cif_confidence', 'meta.source', 'meta.do_notice']
+COLUMNS = ['fields', 'indicator', 'indicator_type', 'meta.desc', 'meta.onfidence', 'meta.source', 'meta.do_notice']
 
 HEADER = '#' + '\t'.join(COLUMNS)
 SEP = '|'

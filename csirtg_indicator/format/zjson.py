@@ -12,8 +12,11 @@ def _indicator_row(i, cols):
     r = dict()
     for c in cols:
         y = i.get(c, u'')
-        if type(y) is list:
-            y = u','.join(y)
+        if isinstance(y, list):
+            if len(y) > 0 and isinstance(y[0], dict):
+                y = ''
+            else:
+                y = u','.join(y)
 
         r[c] = y
 
