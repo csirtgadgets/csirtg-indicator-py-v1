@@ -44,7 +44,7 @@ class Bind(Plugin):
             if isinstance(i, Indicator):
                 i = i.__dict__()
 
-            if i['itype'] is not 'fqdn':
+            if i.get('itype') is not 'fqdn':
                 pass
 
             text.append('zone "{}" {{type master; file "{}";}};'.format(i['indicator'], self.output))

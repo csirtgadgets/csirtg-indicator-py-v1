@@ -57,17 +57,8 @@ def _indicator_to_rule(i, sid):
 
     }
 
-    if i['itype'] == 'ipv4':
-        pass
-
-    if i['itype'] == 'ipv4':
-        pass
-
-    if i['itype'] == 'fqdn':
-        pass
-
-    if i['itype'] == 'url':
-        pass
+    if r['proto'] is None:
+        r['proto'] = 'IP'
 
     return _dict_to_rule(r, opts)
 
