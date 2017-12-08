@@ -7,8 +7,8 @@ if sys.version_info > (3,):
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 PROTOCOL_VERSION = '0.00a14'
 
-FORMAT_COLUMNS = ['tlp', 'group', 'lasttime', 'indicator', 'count', 'confidence', 'tags', 'description', 'rdata',
-                  'provider']
+FORMAT_COLUMNS = ['tlp', 'group', 'reporttime', 'indicator', 'firsttime', 'lasttime', 'count', 'tags', 'description', 'confidence',
+                  'rdata', 'provider']
 
 COLUMNS = FORMAT_COLUMNS
 
