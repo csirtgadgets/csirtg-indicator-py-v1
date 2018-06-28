@@ -63,6 +63,9 @@ class Indicator(object):
 
         self._count = None
         self.count = kwargs.get('count', 1)
+        
+        self._group = None
+        self.group = kwargs.get('group', 'everyone')
 
         for k in FIELDS_TIME:
             setattr(self, k, kwargs.get(k, None))
