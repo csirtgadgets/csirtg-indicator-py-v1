@@ -33,7 +33,7 @@ def _indicator_row(i, cols, max_field_size):
             if PYVERSION == 2:
                 if isinstance(y, basestring):
                     y = unicode(y)
-                    y = y.encode('utf-8', 'ignore')
+                    y = y.encode('latin-1', 'replace')
             y = str(y)
         y = (y[:max_field_size] + '..') if len(y) > max_field_size else y
 
