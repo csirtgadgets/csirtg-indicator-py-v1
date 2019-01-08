@@ -13,14 +13,14 @@ def indicator():
             'tlp': "amber",
             'confidence': "85",
             'reporttime': '2015-01-01T00:00:00Z',
-            'asn_desc': u'telefÔnica brasil'
+            'asn_desc': u'telefÔnica brasilá',
         }
     return Indicator(**i)
 
 
 @pytest.fixture
 def indicator_unicode(indicator):
-    indicator.indicator = 'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60'
+    indicator.indicator = 'http://xz.job391.com/down/ï¿½ï¿½ï¿½ï¿½à¿ªï¿½ï¿½@89_1_60á'
     return indicator
 
 
