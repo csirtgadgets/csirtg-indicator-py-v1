@@ -63,7 +63,7 @@ class Indicator(object):
 
         self._count = None
         self.count = kwargs.get('count', 1)
-        
+
         self._group = None
         self.group = kwargs.get('group', 'everyone')
 
@@ -228,7 +228,8 @@ class Indicator(object):
         for k in FIELDS:
 
             v = getattr(self, k)
-            if not v:
+            # Handle confidence 0.0
+            if not v and not v == 0.0:
                 continue
 
             if k == 'message':
