@@ -46,7 +46,7 @@ FIELDS_GEO = [
 ]
 
 FIELDS_IP = [
-    'portlist', 'protocol', 'asn', 'asn_desc', 'dest', 'dest_portlist', 'mask', 'rdata', 'peers'
+    'portlist', 'protocol', 'asn', 'asn_desc', 'dest', 'dest_portlist', 'mask', 'rdata', 'rtype', 'peers'
 ]
 
 FIELDS = FIELDS_CORE + FIELDS_GEO + FIELDS_META + FIELDS_IP + FIELDS_TIME
