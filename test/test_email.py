@@ -26,10 +26,10 @@ def test_email_fqdn():
 
 def test_email_ok():
     data = [
-        'wes@example.org',
-        'info@sunandsky.co.uk',
-        'wes.info@sunandsky.co.uk',
-        'mutti?25@minsal.cl'
+        'w!es@example.org',
+        '{in|fo}@sunandsky.co.uk',
+        'w*es.info@sun-and-sky.co.uk',
+        'mut-ti?25@minsal.cl'
     ]
 
     for d in data:
