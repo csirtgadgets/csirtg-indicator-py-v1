@@ -65,7 +65,7 @@ def parse_timestamp(ts):
             raise RuntimeError('Invalid Timestamp: %s' % ts)
 
     except arrow.parser.ParserError as e:
-        t = pendulum.parse(ts)
+        t = pendulum.parse(ts, strict=False)
         t = arrow.get(t)
         return t
 
