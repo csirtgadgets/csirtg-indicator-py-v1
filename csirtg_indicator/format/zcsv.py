@@ -89,4 +89,3 @@ class Csv(Plugin):
             csvWriter.writerow(r)
 
         return output.getvalue().strip('\n')
-    
