@@ -54,7 +54,7 @@ class Csv(Plugin):
 
     def __repr__(self):
         output = StringIO()
-        
+
         csvWriter = csv.DictWriter(output, self.cols, quoting=csv.QUOTE_ALL)
         csvWriter.writeheader()
 
@@ -87,5 +87,6 @@ class Csv(Plugin):
 
 
             csvWriter.writerow(r)
-        
-        return output.getvalue().strip('\r\n')
+
+        return output.getvalue().strip('\n')
+    
