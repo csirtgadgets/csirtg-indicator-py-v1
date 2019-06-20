@@ -2,6 +2,7 @@ from .ztable import Table
 from .zcsv import Csv
 from .zjson import Json
 from .zbro import Bro
+from .zzeek import Zeek
 from .zsnort import Snort
 from .zbind import Bind
 from .zbindrpz import BindRPZ
@@ -11,6 +12,7 @@ FORMATS = {
     'csv': Csv,
     'json': Json,
     'bro': Bro,
+    'zeek': Zeek,
     'snort': Snort,
     'bind': Bind,
     'bindrpz': BindRPZ,
