@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from csirtg_indicator.format.zbro import Bro, get_lines
+from csirtg_indicator.format.zzeek import Zeek as Bro, get_lines
 import pytest
 from csirtg_indicator import Indicator
 from faker import Faker
