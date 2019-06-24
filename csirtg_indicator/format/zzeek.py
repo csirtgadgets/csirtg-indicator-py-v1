@@ -30,7 +30,8 @@ def _i_to_zeek(i, cols):
     if isinstance(i, Indicator):
         i = i.__dict__()
 
-    cols = ['indicator', 'itype', 'tags', 'confidence', 'provider']
+    cols = ['indicator', 'itype', 'description', 'tags', 'confidence', 'provider']
+
     r = []
     
     if i['itype'] is 'url':
@@ -64,7 +65,7 @@ def _i_to_zeek(i, cols):
 def get_lines(data, cols=COLUMNS):
     output = StringIO()
     output.write("{0}\n".format(HEADER))
-    cols = ['indicator', 'itype', 'tags', 'confidence', 'provider']
+    cols = ['indicator', 'itype', 'description', 'tags', 'confidence', 'provider']
 
     for i in data:
         i = _i_to_zeek(i, cols)
