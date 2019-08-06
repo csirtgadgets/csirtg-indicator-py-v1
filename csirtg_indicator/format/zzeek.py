@@ -12,6 +12,7 @@ from pprint import pprint
 
 itype = {
     'ipv4': 'ADDR',
+    'cidr': 'SUBNET',
     'ipv6': 'ADDR',
     'url': 'URL',
     'fqdn': 'DOMAIN',
@@ -33,7 +34,11 @@ def _i_to_zeek(i, cols):
     cols = ['indicator', 'itype', 'description', 'tags', 'confidence', 'provider']
 
     r = []
-    
+
+    if i['itype'] == 'ipv4':
+        if "/" in i['indicator']:
+            i['itype'] = 'cidr'
+
     if i['itype'] is 'url':
         i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
 
