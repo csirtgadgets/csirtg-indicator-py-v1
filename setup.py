@@ -46,12 +46,12 @@ setup(
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
     install_requires=[
-        'arrow>=0.7.0',
+        'arrow==0.14.2',
         'pytricia>=0.9.0',
         'ipaddress>=1.0.16',
-        'pendulum>=0.5.2',
+        'pendulum==2.0.5',
         'prettytable>=0.7.2',
-        'Faker'
+        'Faker==0.7.10'
     ],
     entry_points={
        'console_scripts': [
