@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+from pprint import pprint
+import uuid
+import logging
+from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, FIELDS_TIME, LOG_FORMAT
+from base64 import b64encode
+from .exceptions import InvalidIndicator
+from . import VERSION
+from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize
+import pytricia
+import codecs
+from datetime import datetime
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+import textwrap
+import json
 import sys
 if sys.version_info > (3,):
     from urllib.parse import urlparse
@@ -6,21 +20,6 @@ if sys.version_info > (3,):
 else:
     from urlparse import urlparse
 
-import json
-import textwrap
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
-from datetime import datetime
-import codecs
-import pytricia
-from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize
-from . import VERSION
-from .exceptions import InvalidIndicator
-from base64 import b64encode
-from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, FIELDS_TIME, LOG_FORMAT
-import logging
-import uuid
-
-from pprint import pprint
 
 IPV4_PRIVATE = pytricia.PyTricia()
 
@@ -32,6 +31,8 @@ class Indicator(object):
 
     def __init__(self, indicator=None, version=PROTOCOL_VERSION, **kwargs):
         self.version = version
+        self._lowercase = False
+        self._lowercase = kwargs.get('lowercase', False)
 
         for k in FIELDS:
             if k in ['indicator', 'confidence', 'count']:  # handle this at the end
@@ -48,7 +49,8 @@ class Indicator(object):
                 continue
 
             if isinstance(kwargs[k], basestring):
-                kwargs[k] = kwargs[k].lower()
+                if self._lowercase is True:
+                    kwargs[k] = kwargs[k].lower()
                 if k in ['tags', 'peers']:
                     kwargs[k] = kwargs[k].split(',')
 
@@ -87,15 +89,20 @@ class Indicator(object):
             try:
                 i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
             except Exception:
-                i = codecs.unicode_escape_encode(i.encode('utf-8', 'ignore').decode('utf-8'))[0]
+                i = codecs.unicode_escape_encode(
+                    i.encode('utf-8', 'ignore').decode('utf-8'))[0]
 
-        i = i.lower()
+        if self._lowercase is True:
+            i = i.lower()
         self.itype = resolve_itype(i)
         self._indicator = i
 
         if self.itype == 'url':
             u = urlparse(self._indicator)
-            self._indicator = u.geturl().rstrip('/').lower()
+            if self._lowercase is True:
+                self._indicator = u.geturl().rstrip('/').lower()
+            else:
+                self._indicator = u.geturl().rstrip('/')
 
         if self.itype == 'ipv4':
             self._indicator = ipv4_normalize(self._indicator)
@@ -164,6 +171,18 @@ class Indicator(object):
     @confidence.getter
     def confidence(self):
         return self._confidence
+
+    @property
+    def lowercase(self):
+        return self._lowercase
+
+    @lowercase.setter
+    def lowercase(self, v):
+        self._lowercase = float(v)
+
+    @lowercase.getter
+    def lowercase(self):
+        return self._lowercase
 
     @property
     def count(self):
@@ -244,7 +263,7 @@ class Indicator(object):
                 v = v.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
             if isinstance(v, basestring):
-                if k is not 'message' and not k.endswith('time'):
+                if k is not 'message' and not k.endswith('time') and self._lowercase is False:
                     v = v.lower()
 
             if k == 'confidence':
