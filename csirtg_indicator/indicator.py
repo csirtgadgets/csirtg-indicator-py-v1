@@ -31,8 +31,8 @@ class Indicator(object):
 
     def __init__(self, indicator=None, version=PROTOCOL_VERSION, **kwargs):
         self.version = version
-        self._lowercase = False
-        self._lowercase = kwargs.get('lowercase', False)
+        self._lowercase = True
+        self._lowercase = kwargs.get('lowercase', True)
 
         for k in FIELDS:
             if k in ['indicator', 'confidence', 'count']:  # handle this at the end
