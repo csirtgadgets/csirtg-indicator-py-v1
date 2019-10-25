@@ -3,6 +3,7 @@ import json
 from csirtg_indicator.exceptions import InvalidIndicator
 from random import randint, uniform
 
+
 def test_indicator_ipv4():
     i = Indicator('192.168.1.1')
     assert i.is_private()
@@ -23,6 +24,30 @@ def test_indicator_url():
 
     assert i.is_private() is False
     assert i.indicator == 'http://example.org'
+    assert i.itype is not 'fqdn'
+    assert i.itype is 'url'
+    assert 'botnet' in i.tags
+    assert 'malware' in i.tags
+
+
+def test_indicator_mixedcase_lower_false():
+    i = Indicator('http://example.org/MiXeDCaSe',
+                  tags='botnet,malware', lowercase=False)
+
+    assert i.is_private() is False
+    assert i.indicator == 'http://example.org/MiXeDCaSe'
+    assert i.itype is not 'fqdn'
+    assert i.itype is 'url'
+    assert 'botnet' in i.tags
+    assert 'malware' in i.tags
+
+
+def test_indicator_mixedcase_lower_true():
+    i = Indicator('http://example.org/MiXeDCaSe',
+                  tags='botnet,malware', lowercase=True)
+
+    assert i.is_private() is False
+    assert i.indicator == 'http://example.org/mixedcase'
     assert i.itype is not 'fqdn'
     assert i.itype is 'url'
     assert 'botnet' in i.tags
@@ -68,7 +93,8 @@ def test_format_indicator():
 
 
 def test_indicator_dest():
-    i = Indicator(indicator='192.168.1.1', dest='10.0.0.1', portlist="23", protocol="tcp", dest_portlist='21,22-23')
+    i = Indicator(indicator='192.168.1.1', dest='10.0.0.1',
+                  portlist="23", protocol="tcp", dest_portlist='21,22-23')
     assert i.dest
     assert i.dest_portlist
 
