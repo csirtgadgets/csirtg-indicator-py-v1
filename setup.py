@@ -46,7 +46,7 @@ setup(
     author_email="wes@csirtgadgets.org",
     packages=find_packages(),
     install_requires=[
-        'arrow==0.14.2',
+        'arrow>=0.15.2',
         'pytricia>=0.9.0',
         'ipaddress>=1.0.16',
         'pendulum==2.0.5',

@@ -42,15 +42,15 @@ class Stix(Plugin):
             return f
 
         def _address_ipv4(address):
-            if re.search('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}', address):
+            if re.search(r'^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}', address):
                 return 1
 
         def _address_fqdn(address):
-            if re.search('^[a-zA-Z0-9.\-_]+\.[a-z]{2,6}$', address):
+            if re.search(r'^[a-zA-Z0-9.-_]+.[a-z]{2,6}$', address):
                 return 1
 
         def _address_url(address):
-            if re.search('^(ftp|https?):\/\/', address):
+            if re.search(r'^(ftp|https?)://', address):
                 return 1
 
         def _address(keypair):
