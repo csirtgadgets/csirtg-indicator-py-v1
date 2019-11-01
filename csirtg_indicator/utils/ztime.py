@@ -34,16 +34,28 @@ def parse_timestamp(ts):
                 ts = str(ts)
             if len(ts) == 8:
                 ts = '{}T00:00:00Z'.format(ts)
-                t = arrow.get(ts, 'YYYYMMDDTHH:mm:ss')
+                t = arrow.get(ts, 'YYYYMMDDTHH:mm:ssZ')
+
+            if t.year < 1970:
+                raise RuntimeError('a invalid timestamp: %s' % ts)
+
+        return t
+    except arrow.parser.ParserError as e:
+        t = arrow.get(ts, ['YYYY-MM-DD HH:mm:ss ZZZ', 'ddd, DD MMM YYYY HH:mm:ss Z'])
+        if t.year < 1980:
+            if type(ts) == datetime:
+                ts = str(ts)
+            if len(ts) == 8:
+                ts = '{}T00:00:00Z'.format(ts)
+                t = arrow.get(ts, 'YYYYMMDDTHH:mm:ssZ')
 
             if t.year < 1970:
                 raise RuntimeError('invalid timestamp: %s' % ts)
-
         return t
 
-    except ValueError as e:
+    except arrow.parser.ParserError as e:
         if len(ts) == 14:
-            match = re.search('^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$', ts)
+            match = re.search(r'^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$', ts)
             if match:
                 ts = '{}-{}-{}T{}:{}:{}Z'.format(match.group(1), match.group(2), match.group(3), match.group(4),
                                                  match.group(5), match.group(6))
@@ -53,7 +65,7 @@ def parse_timestamp(ts):
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
         if len(ts) == 16:
             # 20160219T224322Z
-            match = re.search('^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$', ts)
+            match = re.search(r'^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$', ts)
             if match:
                 ts = '{}-{}-{}T{}:{}:{}Z'.format(match.group(1), match.group(2), match.group(3), match.group(4),
                                                  match.group(5), match.group(6))
