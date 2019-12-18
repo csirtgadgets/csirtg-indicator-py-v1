@@ -19,6 +19,7 @@ itype = {
     'md5': 'FILE_HASH',
     'sha1': 'FILE_HASH',
     'sha256': 'FILE_HASH',
+    'ja3': 'JA3',
 }
 
 COLUMNS = ['fields', 'indicator', 'indicator_type', 'meta.cif_description', 'meta.cif_tags', 'meta.cif_confidence', 'meta.source', 'meta.do_notice']
@@ -38,6 +39,9 @@ def _i_to_zeek(i, cols):
     if i['itype'] == 'ipv4':
         if "/" in i['indicator']:
             i['itype'] = 'cidr'
+
+    if (i['itype'] == 'md5') and ('ja3' in i['tags']):
+        i['itype'] = 'ja3'
 
     if i['itype'] is 'url':
         i['indicator'] = re.sub(r'(https?\:\/\/)', '', i['indicator'])
