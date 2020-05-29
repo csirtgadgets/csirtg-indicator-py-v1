@@ -55,6 +55,9 @@ def _i_to_zeek(i, cols):
         if isinstance(y, int):
             y = str(y)
 
+        if isinstance(y, str):
+            y = y.replace('\n', ' ')
+
         if PYVERSION == 2:
             if isinstance(y, unicode):
                 y = y.encode('utf-8')
