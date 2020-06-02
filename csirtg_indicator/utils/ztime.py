@@ -27,12 +27,14 @@ def parse_timestamp(ts):
     if t:
         return t
 
+    ts_len = len(ts)
+    
     try:
         t = arrow.get(ts)
         if t.year < 1980:
             if type(ts) == datetime:
                 ts = str(ts)
-            if len(ts) == 8:
+            if ts_len == 8:
                 ts = '{}T00:00:00Z'.format(ts)
                 t = arrow.get(ts, 'YYYYMMDDTHH:mm:ssZ')
 
@@ -40,21 +42,18 @@ def parse_timestamp(ts):
                 raise RuntimeError('a invalid timestamp: %s' % ts)
 
         return t
-    except arrow.parser.ParserError as e:
-        t = arrow.get(ts, ['YYYY-MM-DD HH:mm:ss ZZZ', 'ddd, DD MMM YYYY HH:mm:ss Z'])
-        if t.year < 1980:
-            if type(ts) == datetime:
-                ts = str(ts)
-            if len(ts) == 8:
-                ts = '{}T00:00:00Z'.format(ts)
-                t = arrow.get(ts, 'YYYYMMDDTHH:mm:ssZ')
-
-            if t.year < 1970:
-                raise RuntimeError('invalid timestamp: %s' % ts)
-        return t
 
     except arrow.parser.ParserError as e:
-        if len(ts) == 14:
+        # epoch timestamp like 1590673128 or 1590673128.02 (assuming 9-10 digit epoch; will work until year 2286)
+        if isinstance(ts, str) and ts_len >=9 and ts_len <= 13:
+            try:
+                ts_f = float(ts)
+                t = arrow.get(ts_f)
+                return t
+            except:
+                pass
+
+        if ts_len == 14:
             match = re.search(r'^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$', ts)
             if match:
                 ts = '{}-{}-{}T{}:{}:{}Z'.format(match.group(1), match.group(2), match.group(3), match.group(4),
@@ -63,7 +62,8 @@ def parse_timestamp(ts):
                 return t
             else:
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
-        if len(ts) == 16:
+
+        if ts_len == 16:
             # 20160219T224322Z
             match = re.search(r'^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$', ts)
             if match:
@@ -73,13 +73,24 @@ def parse_timestamp(ts):
                 return t
             else:
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
-        else:
-            raise RuntimeError('Invalid Timestamp: %s' % ts)
 
-    except arrow.parser.ParserError as e:
-        t = pendulum.parse(ts, strict=False)
-        t = arrow.get(t)
-        return t
+        try:
+            t = arrow.get(ts, ['YYYY-MM-DD HH:mm:ss ZZZ', 'ddd, DD MMM YYYY HH:mm:ss Z', 'x'])
+            if t.year < 1980:
+                if type(ts) == datetime:
+                    ts = str(ts)
+                if ts_len == 8:
+                    ts = '{}T00:00:00Z'.format(ts)
+                    t = arrow.get(ts, 'YYYYMMDDTHH:mm:ssZ')
+
+                if t.year < 1970:
+                    raise RuntimeError('invalid timestamp: %s' % ts)
+            return t
+
+        except arrow.parser.ParserError as e:
+            t = pendulum.parse(ts, strict=False)
+            t = arrow.get(t)
+            return t
 
     else:
         raise RuntimeError('Invalid Timestamp: %s' % ts)
