@@ -211,7 +211,7 @@ class Indicator(object):
     @count.setter
     def count(self, v):
         self._count = int(v)
-        
+
     @count.getter
     def count(self):
         return self._count
