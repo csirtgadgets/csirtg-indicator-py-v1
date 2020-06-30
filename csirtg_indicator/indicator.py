@@ -59,7 +59,7 @@ class Indicator(object):
                     kwargs[k] = kwargs[k].lower()
                 if k in ['tags', 'peers']:
                     kwargs[k] = kwargs[k].split(',')
-                    
+
             setattr(self, k, kwargs[k])
 
         self._indicator = None
@@ -90,7 +90,7 @@ class Indicator(object):
         if not i:
             self._indicator = None
             return
-        
+
         if PYVERSION == 2:
             try:
                 i = codecs.unicode_escape_encode(i.decode('utf-8'))[0]
@@ -122,7 +122,7 @@ class Indicator(object):
     @indicator.getter
     def indicator(self):
         return self._indicator
-    
+
     @property
     def confidence(self):
         return self._confidence
@@ -151,7 +151,7 @@ class Indicator(object):
     @property
     def lasttime(self):
         return self._lasttime
-    
+
     @lasttime.getter
     def lasttime(self):
         return self._lasttime
@@ -301,7 +301,7 @@ class Indicator(object):
         except UnicodeDecodeError as e:
             i['asn_desc'] = unicode(i['asn_desc'].decode('latin-1'))
             return json.dumps(i, indent=indent, sort_keys=sort_keys, separators=(',', ': '))
-        
+
     def __eq__(self, other):
         d1 = self.__dict__()
         d2 = other.__dict__()
