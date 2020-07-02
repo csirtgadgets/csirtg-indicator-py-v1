@@ -31,8 +31,14 @@ class Indicator(object):
 
     def __init__(self, indicator=None, version=PROTOCOL_VERSION, **kwargs):
         self.version = version
-        self._lowercase = True
-        self._lowercase = kwargs.get('lowercase', True)
+        if 'lowercase' in kwargs:
+            self._lowercase = kwargs.get('lowercase')
+            # indicate lowercase arg was explicitly passed by user rather than just a  default value
+            self._lowercase_explicit = True
+        else:
+            # set lowercase to True by default, but ensure we can later determine it was not user specified
+            self._lowercase = True
+            self._lowercase_explicit = False
 
         for k in FIELDS:
             if k in ['indicator', 'confidence', 'count']:  # handle this at the end
@@ -92,17 +98,19 @@ class Indicator(object):
                 i = codecs.unicode_escape_encode(
                     i.encode('utf-8', 'ignore').decode('utf-8'))[0]
 
-        if self._lowercase is True:
-            i = i.lower()
-        self.itype = resolve_itype(i)
+        self.itype = resolve_itype(i.lower())
         self._indicator = i
 
         if self.itype == 'url':
             u = urlparse(self._indicator)
-            if self._lowercase is True:
+            if self._lowercase is True and self._lowercase_explicit is True:
                 self._indicator = u.geturl().rstrip('/').lower()
             else:
                 self._indicator = u.geturl().rstrip('/')
+        else:
+            if self._lowercase is True:
+                self._indicator = self._indicator.lower()
+
 
         if self.itype == 'ipv4':
             self._indicator = ipv4_normalize(self._indicator)
@@ -178,11 +186,23 @@ class Indicator(object):
 
     @lowercase.setter
     def lowercase(self, v):
-        self._lowercase = float(v)
+        self._lowercase = bool(v)
 
     @lowercase.getter
     def lowercase(self):
         return self._lowercase
+
+    @property
+    def lowercase_explicit(self):
+        return self._lowercase_explicit
+
+    @lowercase.setter
+    def lowercase_explicit(self, v):
+        self._lowercase_explicit = bool(v)
+
+    @lowercase.getter
+    def lowercase_explicit(self):
+        return self._lowercase_explicit
 
     @property
     def count(self):
@@ -263,7 +283,7 @@ class Indicator(object):
                 v = v.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
             if isinstance(v, basestring):
-                if k is not 'message' and not k.endswith('time') and self._lowercase is False:
+                if k not in ['indicator', 'message'] and not k.endswith('time') and self._lowercase is True:
                     v = v.lower()
 
             if k == 'confidence':
