@@ -27,7 +27,11 @@ def parse_timestamp(ts):
     if t:
         return t
 
-    ts_len = len(ts)
+    ts_len = 0
+    if isinstance(ts, str):
+        ts_len = len(ts)
+    elif isinstance(ts, int):
+        ts_len = len(str(ts))
     
     try:
         t = arrow.get(ts)
