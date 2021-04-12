@@ -58,11 +58,12 @@ def parse_timestamp(ts):
                 pass
 
         if ts_len == 14:
+            # 20210411123448
             match = re.search(r'^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$', ts)
             if match:
                 ts = '{}-{}-{}T{}:{}:{}Z'.format(match.group(1), match.group(2), match.group(3), match.group(4),
                                                  match.group(5), match.group(6))
-                t = arrow.get(ts, 'YYYY-MM-DDTHH:mm:ss')
+                t = arrow.get(ts, ['YYYY-MM-DDTHH:mm:ss', 'YYYY-MM-DDTHH:mm:ssZ'])
                 return t
             else:
                 raise RuntimeError('Invalid Timestamp: %s' % ts)
