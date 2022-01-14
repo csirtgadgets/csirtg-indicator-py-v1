@@ -59,6 +59,17 @@ class Indicator(object):
                     kwargs[k] = kwargs[k].lower()
                 if k in ['tags', 'peers']:
                     kwargs[k] = kwargs[k].split(',')
+                    
+            # handle issue of single element containing multiple comma-delimited tags (e.g.: tags=["malware,phishing"] )
+            elif isinstance(kwargs[k], list):
+                if k in ['tags']:
+                    tmp_list = []
+                    for x in kwargs[k]:
+                        if ',' in x:
+                            tmp_list.extend([y.strip() for y in x.split(',') if y])
+                        else:
+                            tmp_list.append(x.strip())
+                    kwargs[k] = tmp_list
 
             setattr(self, k, kwargs[k])
 
