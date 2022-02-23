@@ -55,6 +55,9 @@ class Indicator(object):
                 continue
 
             if isinstance(kwargs[k], basestring):
+                # always stripe whitespace
+                kwargs[k] = kwargs[k].strip()
+                
                 if self._lowercase is True:
                     kwargs[k] = kwargs[k].lower()
                 if k in ['tags', 'peers']:
@@ -75,7 +78,7 @@ class Indicator(object):
 
         self._indicator = None
         if indicator:
-            self.indicator = indicator
+            self.indicator = indicator.strip()
 
         self._confidence = 0
         self.confidence = kwargs.get('confidence', 0)
