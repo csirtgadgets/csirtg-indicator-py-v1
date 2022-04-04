@@ -1,5 +1,4 @@
 from csirtg_indicator import Indicator
-from csirtg_indicator.utils import is_subdomain
 from faker import Faker
 fake = Faker()
 
@@ -12,6 +11,8 @@ GOOD = [
     'xn----jtbbmekqknepg3a.xn--p1ai',
     'dualstack.cddf-prod-frontend-1ho73vqwbi0tw-1326553765.us-east-1.elb.amazonaws.com',
     'laser-retargeting-server-production.us-east-1-prod-core-edge-public.spongecell.net',
+    'example.org.',
+    'an0ther.exAmple.orG.',
 ]
 
 
@@ -39,14 +40,17 @@ def test_fqdn_urls():
 def test_fqdn_ok():
 
     for d in GOOD:
-        d = Indicator(d)
-        assert d.itype is 'fqdn'
+        e = Indicator(d)
+        assert e.itype is 'fqdn'
+        d = d.rstrip('.')
+        assert e.indicator == d.lower()
 
 
 def test_fqdn_subdomain():
     data = [
         'www.yahoo.com',
         'www.ww2.yahoo.com',
+        'this.is.aNother.sub.domain.tld.',
     ]
 
     for d in data:
@@ -57,6 +61,7 @@ def test_fqdn_subdomain():
     data = [
         'yahoo.com',
         'google.com',
+        'notasubdomain.tLd.',
         'http://google.com',
         'https://www.google.com',
         'http://www2.www.google.com',
