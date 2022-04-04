@@ -59,7 +59,7 @@ class Indicator(object):
                 # always strip whitespace
                 kwargs[k] = kwargs[k].strip()
                 
-                if self._lowercase is True:
+                if self._lowercase is True and k != 'reference': # don't lower reference which may be a url
                     kwargs[k] = kwargs[k].lower()
                 if k in ['tags', 'peers']:
                     kwargs[k] = kwargs[k].split(',')
@@ -294,7 +294,7 @@ class Indicator(object):
                 v = v.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
             if isinstance(v, basestring):
-                if k not in ['indicator', 'message'] and not k.endswith('time') and self._lowercase is True:
+                if k not in ['indicator', 'message', 'reference'] and not k.endswith('time') and self._lowercase is True:
                     v = v.lower()
 
             if k == 'confidence':

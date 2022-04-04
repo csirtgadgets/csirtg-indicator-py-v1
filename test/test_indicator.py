@@ -1,3 +1,4 @@
+from weakref import ref
 from csirtg_indicator import Indicator
 import json
 from csirtg_indicator.exceptions import InvalidIndicator
@@ -149,3 +150,12 @@ def test_eq():
 
     u2.uuid = u1.uuid
     assert u1 == u2
+
+def test_reference_field_case():
+    ref_url = 'http://good.intel.tld/API/Generator'
+    i = Indicator('http://example.org', tags='botnet,malware', reference=ref_url)
+
+    assert i.reference == ref_url
+
+    x = json.loads(i.__repr__())
+    assert x['reference'] == ref_url
