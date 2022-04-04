@@ -6,8 +6,8 @@ from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, F
 from base64 import b64encode
 from .exceptions import InvalidIndicator
 from . import VERSION
-from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize, \
-    normalize_indicator
+from .utils import resolve_itype, is_subdomain, ipv4_normalize, normalize_indicator
+from .utils.ztime import parse_timestamp
 import pytricia
 import codecs
 from datetime import datetime
@@ -56,7 +56,7 @@ class Indicator(object):
                 continue
 
             if isinstance(kwargs[k], basestring):
-                # always stripe whitespace
+                # always strip whitespace
                 kwargs[k] = kwargs[k].strip()
                 
                 if self._lowercase is True:
