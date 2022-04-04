@@ -6,7 +6,8 @@ from .constants import PYVERSION, IPV4_PRIVATE_NETS, PROTOCOL_VERSION, FIELDS, F
 from base64 import b64encode
 from .exceptions import InvalidIndicator
 from . import VERSION
-from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize
+from .utils import parse_timestamp, resolve_itype, is_subdomain, ipv4_normalize, \
+    normalize_indicator
 import pytricia
 import codecs
 from datetime import datetime
@@ -33,7 +34,7 @@ class Indicator(object):
         self.version = version
         if 'lowercase' in kwargs:
             self._lowercase = kwargs.get('lowercase')
-            # indicate lowercase arg was explicitly passed by user rather than just a  default value
+            # indicate lowercase arg was explicitly passed by user rather than just a default value
             self._lowercase_explicit = True
         else:
             # set lowercase to True by default, but ensure we can later determine it was not user specified
@@ -115,19 +116,15 @@ class Indicator(object):
         self.itype = resolve_itype(i.lower())
         self._indicator = i
 
-        if self.itype == 'url':
-            u = urlparse(self._indicator)
-            if self._lowercase is True and self._lowercase_explicit is True:
-                self._indicator = u.geturl().rstrip('/').lower()
-            else:
-                self._indicator = u.geturl().rstrip('/')
-        else:
-            if self._lowercase is True:
-                self._indicator = self._indicator.lower()
+        if self.itype in ['url', 'fqdn']:
+            self._indicator = normalize_indicator(self._indicator, itype=self.itype, 
+                lowercase=self._lowercase, lowercase_explicit=self._lowercase_explicit)
 
-
-        if self.itype == 'ipv4':
+        elif self.itype == 'ipv4':
             self._indicator = ipv4_normalize(self._indicator)
+
+        else:
+            self._indicator = self._indicator.lower()
 
         if self.mask and (self.itype in ['ipv4', 'ipv6']):
             self._indicator = '{}/{}'.format(self._indicator, int(self.mask))
