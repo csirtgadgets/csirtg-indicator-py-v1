@@ -1,3 +1,4 @@
+from weakref import ref
 from csirtg_indicator import Indicator
 import json
 from csirtg_indicator.exceptions import InvalidIndicator
@@ -30,9 +31,10 @@ def test_indicator_url():
     assert 'malware' in i.tags
 
 
-def test_indicator_mixedcase_lower_false():
-    i = Indicator('http://example.org/MiXeDCaSe',
-                  tags='botnet,malware', lowercase=False)
+# by default, if it's a url, lower the hostname but not the path
+def test_indicator_mixedcase_lower_default():
+    i = Indicator('http://exAmple.Org./MiXeDCaSe',
+                  tags='botnet,malware')
 
     assert i.is_private() is False
     assert i.indicator == 'http://example.org/MiXeDCaSe'
@@ -41,7 +43,19 @@ def test_indicator_mixedcase_lower_false():
     assert 'botnet' in i.tags
     assert 'malware' in i.tags
 
+# if it's a url and user explicitly says don't lowercase, leave entire indicator as-is
+def test_indicator_mixedcase_lower_false():
+    i = Indicator('http://examPle.org/MiXeDCaSe',
+                  tags='botnet,malware', lowercase=False)
 
+    assert i.is_private() is False
+    assert i.indicator == 'http://examPle.org/MiXeDCaSe'
+    assert i.itype is not 'fqdn'
+    assert i.itype is 'url'
+    assert 'botnet' in i.tags
+    assert 'malware' in i.tags
+
+# if it's a url and user explicitly says to lowercase, force all parts to lowercase
 def test_indicator_mixedcase_lower_true():
     i = Indicator('http://example.org/MiXeDCaSe',
                   tags='botnet,malware', lowercase=True)
@@ -136,3 +150,12 @@ def test_eq():
 
     u2.uuid = u1.uuid
     assert u1 == u2
+
+def test_reference_field_case():
+    ref_url = 'http://good.intel.tld/API/Generator'
+    i = Indicator('http://example.org', tags='botnet,malware', reference=ref_url)
+
+    assert i.reference == ref_url
+
+    x = json.loads(i.__repr__())
+    assert x['reference'] == ref_url
