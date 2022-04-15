@@ -116,7 +116,7 @@ class Indicator(object):
         self.itype = resolve_itype(i.lower())
         self._indicator = i
 
-        if self.itype in ['url', 'fqdn']:
+        if self.itype in ['url', 'fqdn', 'ssdeep']:
             self._indicator = normalize_indicator(self._indicator, itype=self.itype, 
                 lowercase=self._lowercase, lowercase_explicit=self._lowercase_explicit)
 

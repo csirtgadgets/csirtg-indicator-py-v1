@@ -8,8 +8,6 @@ except ImportError:
     from io import StringIO
 
 
-from pprint import pprint
-
 itype = {
     'ipv4': 'ADDR',
     'cidr': 'SUBNET',
@@ -19,7 +17,10 @@ itype = {
     'md5': 'FILE_HASH',
     'sha1': 'FILE_HASH',
     'sha256': 'FILE_HASH',
+    'sha512': 'FILE_HASH',
+    'ssdeep': 'FILE_HASH',
     'ja3': 'JA3',
+    'email': 'EMAIL',
 }
 
 COLUMNS = ['fields', 'indicator', 'indicator_type', 'meta.cif_description', 'meta.cif_tags', 'meta.cif_confidence', 'meta.source', 'meta.do_notice']

@@ -114,6 +114,15 @@ data = [
         'confidence': "10",
         'reporttime': '2015-01-01T00:00:00Z',
         'tags': ['malware']
+    },
+    # ssdeep
+    {
+        'indicator': "6144:3wSQSlrBHFjOvwYAU/Fsgi/2WDg5+YaNk5xcHrYw+Zg+XrZsGEREYRGAFU25ttR/:ctM7E0L4q",
+        'provider': "me.com",
+        'tlp': "amber",
+        'confidence': "10",
+        'reporttime': '2015-01-01T00:00:00Z',
+        'tags': ['malware']
     }
 
 ]
