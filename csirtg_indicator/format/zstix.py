@@ -7,7 +7,6 @@ from cybox.objects.file_object import File
 from cybox.objects.address_object import Address
 from csirtg_indicator.constants import RE_IPV4, RE_IPV6, RE_FQDN, RE_EMAIL, RE_ASN, RE_HASH, RE_URI_SCHEMES
 from csirtg_indicator import Indicator
-import re
 
 
 class Stix(Plugin):
@@ -16,42 +15,12 @@ class Stix(Plugin):
         super(Stix, self).__init__(*args, **kwargs)
 
     def _create_indicator(self, d):
-        def _md5(keypair):
-            shv = Hash()
-            shv.simple_hash_value = keypair.get('indicator')
-
+        def _hash(keypair, hash_type):
+            hash_type = 'TYPE_{}'.format(hash_type.upper())
+            h = Hash(keypair.get('indicator'), getattr(Hash, hash_type))
             f = File()
-            h = Hash(shv, Hash.TYPE_MD5)
             f.add_hash(h)
             return f
-
-        def _sha1(keypair):
-            shv = Hash()
-            shv.simple_hash_value = keypair.get('indicator')
-
-            f = File()
-            h = Hash(shv, Hash.TYPE_SHA1)
-            f.add_hash(h)
-            return f
-
-        def _sha256(keypair):
-            shv = Hash()
-            shv.simple_hash_value = keypair.get('indicator')
-
-            f = File()
-            h = Hash(shv, Hash.TYPE_SHA256)
-            f.add_hash(h)
-            return f
-        
-        def _sha512(keypair):
-            shv = Hash()
-            shv.simple_hash_value = keypair.get('indicator')
-
-            f = File()
-            h = Hash(shv, Hash.TYPE_SHA512)
-            f.add_hash(h)
-            return f
-
 
         def _address_email(address):
             if RE_EMAIL.search(address):
@@ -97,18 +66,18 @@ class Stix(Plugin):
         itype = d.get('itype')
         i = d.get('indicator')
 
-        if itype == 'md5' or RE_HASH['md5'].search(i):
-            f = _md5(d)
-        elif itype == 'sha1' or RE_HASH['sha1'].search(i):
-            f = _sha1(d)
-        elif itype == 'sha256' or RE_HASH['sha256'].search(i):
-            f = _sha256(d)
-        elif itype == 'sha512' or RE_HASH['sha512'].search(i):
-            f = _sha512(d)
-        elif itype == 'asn' or RE_ASN.search(i):
-            f = Address(i, 'asn')
-        else:
-            f = _address(d)
+        f = None
+
+        for hash_type in RE_HASH.keys():
+            if itype == hash_type or RE_HASH[hash_type].search(i):
+                f = _hash(d, hash_type)
+                break
+
+        if not f:
+            if itype == 'asn' or RE_ASN.search(i):
+                f = Address(i, 'asn')
+            else:
+                f = _address(d)
 
         indicator.add_object(f)
         return indicator
