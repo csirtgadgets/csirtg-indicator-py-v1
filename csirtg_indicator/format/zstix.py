@@ -61,7 +61,7 @@ class Stix(Plugin):
 
         indicator.set_produced_time(arrow.utcnow().datetime)
 
-        indicator.description = ','.join(d.get('tags'))
+        indicator.description = d.get('description') or ','.join(d.get('tags'))
 
         itype = d.get('itype')
         i = d.get('indicator')
