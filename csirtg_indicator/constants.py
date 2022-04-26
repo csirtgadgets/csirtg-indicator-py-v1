@@ -76,6 +76,6 @@ RE_HASH = {
     'sha1': re.compile(r'^[a-fA-F0-9]{40}$'),
     'sha256': re.compile(r'^[a-fA-F0-9]{64}$'),
     'sha512': re.compile(r'^[a-fA-F0-9]{128}$'),
-    'ssdeep': re.compile(r'(^(\d*):([\w/+]*):([\w/+]*)|(\d*):([\w/+]*)\+([\w/+]*):([\w/+]*))$'),
+    'ssdeep': re.compile(r'^(\d+):([\w\/+]+):([\w\/+]+)$'),
 }
 
