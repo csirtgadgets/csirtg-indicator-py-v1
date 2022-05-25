@@ -57,7 +57,7 @@ def _i_to_zeek(i, cols):
             y = str(y)
 
         if isinstance(y, str):
-            y = y.replace('\n', ' ')
+            y = re.sub(r'\r|\t|\n', ' ', y)
 
         if PYVERSION == 2:
             if isinstance(y, unicode):
