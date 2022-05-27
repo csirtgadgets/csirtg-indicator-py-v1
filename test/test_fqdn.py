@@ -1,5 +1,7 @@
 from csirtg_indicator import Indicator
+from csirtg_indicator.exceptions import InvalidIndicator
 from faker import Faker
+import pytest
 fake = Faker()
 
 
@@ -13,6 +15,37 @@ GOOD = [
     'laser-retargeting-server-production.us-east-1-prod-core-edge-public.spongecell.net',
     'example.org.',
     'an0ther.exAmple.orG.',
+    'under_score.com',
+    '_dc-mx.test.someotherdom.com.',
+]
+
+BAD = [
+    'dot.',
+    'this.is-bad-',
+    'this-too.is_bad-.',
+    'this.is.bad-.com',
+    'space com',
+    'a.12E.',
+    '192.168.1.13F',
+    'underscore.c_om',
+    '-dash.com',
+    'dash-.com',
+    'sub.-dash.com',
+    'sub-.dash.com',
+    '-.com',
+    '-com',
+    '.com',
+    'com',
+    'mkyong.t.t.c',
+    'mkyong,com',
+    'mkyong.com/users',
+    'slash.com/',
+    'a.123',
+    'b.123.',
+    'x.XN--VERMGENSBERATUNG-PWBBJALKJSDFWHATLADKDALKJSDFJWHATLEIUDWLAIFU',
+    'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkk.com',
+    'www.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkk.co.uk',
+    'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcde.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.comm',
 ]
 
 
@@ -44,6 +77,11 @@ def test_fqdn_ok():
         assert e.itype is 'fqdn'
         d = d.rstrip('.')
         assert e.indicator == d.lower()
+
+def test_fqdn_not_ok():
+    for d in BAD:
+        with pytest.raises(InvalidIndicator):
+            e = Indicator(d)
 
 
 def test_fqdn_subdomain():
