@@ -43,7 +43,7 @@ FIELDS_META = [
 ]
 
 FIELDS_GEO = [
-    'cc', 'latitude', 'timezone', 'longitude', 'city', 'region'
+    'cc', 'latitude', 'timezone', 'longitude', 'city', 'region', 'location'
 ]
 
 FIELDS_IP = [
