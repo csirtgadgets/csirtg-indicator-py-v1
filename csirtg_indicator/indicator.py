@@ -15,6 +15,7 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import textwrap
 import json
 import sys
+import re
 if sys.version_info > (3,):
     from urllib.parse import urlparse
     basestring = (str, bytes)
@@ -57,7 +58,7 @@ class Indicator(object):
 
             if isinstance(kwargs[k], basestring):
                 # always strip whitespace
-                kwargs[k] = kwargs[k].strip()
+                kwargs[k] = re.sub(r'\r|\t|\n', ' ', kwargs[k]).strip()
                 
                 if self._lowercase is True and k != 'reference': # don't lower reference which may be a url
                     kwargs[k] = kwargs[k].lower()
