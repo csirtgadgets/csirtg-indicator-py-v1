@@ -5,6 +5,7 @@ from .zzeek import Zeek
 from .zsnort import Snort
 from .zbind import Bind
 from .zbindrpz import BindRPZ
+from .zbindrpzip import BindRPZIP
 
 FORMATS = {
     'table': Table,
@@ -15,6 +16,7 @@ FORMATS = {
     'snort': Snort,
     'bind': Bind,
     'bindrpz': BindRPZ,
+    'bindrpzip': BindRPZIP,
 }
 
 STIX_ENABLED = True
