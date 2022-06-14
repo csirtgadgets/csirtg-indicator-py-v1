@@ -9,14 +9,8 @@ def human_to_dt(ts):
     if ts == 'now':
         return t
 
-    if ts == 'hour':
-        return t.replace(minute=0, second=0, microsecond=0)
-
-    if ts == 'day':
-        return t.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    if ts == 'month':
-        return t.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    if ts in [ 'hour', 'day', 'week', 'month' ]:
+        return t.floor(ts)
 
 
 def parse_timestamp(ts):
